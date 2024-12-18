@@ -2,10 +2,12 @@ import { useActionSheet } from '@expo/react-native-action-sheet'
 import { Chat, MessageType } from '@flyerhq/react-native-chat-ui'
 import { PreviewData } from '@flyerhq/react-native-link-preview'
 import React, { useState } from 'react'
-// import DocumentPicker from 'react-native-document-picker'
-// import FileViewer from 'react-native-file-viewer'
+import DocumentPicker from 'react-native-document-picker'
+import FileViewer from 'react-native-file-viewer'
 import * as ImagePicker from 'expo-image-picker';
-import { v4 as uuidv4 } from 'uuid'
+
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 import data from '../message.json'
 
@@ -39,24 +41,24 @@ const App = () => {
 
   const handleFileSelection = async () => {
     try {
-      // const response = await DocumentPicker.pickSingle({
-      //   type: [DocumentPicker.types.allFiles],
-      // })
-      // const fileMessage: MessageType.File = {
-      //   author: user,
-      //   createdAt: Date.now(),
-      //   id: uuidv4(),
-      //   mimeType: response.type ?? undefined,
-      //   name: response.name,
-      //   size: response.size ?? 0,
-      //   type: 'file',
-      //   uri: response.uri,
-      // }
-      // addMessage(fileMessage)
-    } catch {}
+      const response = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      })
+      const fileMessage: MessageType.File = {
+        author: user,
+        createdAt: Date.now(),
+        id: uuidv4(),
+        mimeType: response.type ?? undefined,
+        name: response.name,
+        size: response.size ?? 0,
+        type: 'file',
+        uri: response.uri,
+      }
+      addMessage(fileMessage)
+    } catch { }
   }
 
-  const handleImageSelection =async () => {
+  const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
@@ -87,8 +89,8 @@ const App = () => {
   const handleMessagePress = async (message: MessageType.Any) => {
     if (message.type === 'file') {
       try {
-        // await FileViewer.open(message.uri, { showOpenWithDialog: true })
-      } catch {}
+        await FileViewer.open(message.uri, { showOpenWithDialog: true })
+      } catch { }
     }
   }
 
