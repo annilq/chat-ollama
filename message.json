@@ -1,0 +1,122 @@
+[
+  {
+    "author": {
+      "firstName": "Jane",
+      "id": "06c33e8b-e835-4736-80f4-63f44b66666c",
+      "imageUrl": "https://avatars.githubusercontent.com/u/33809426?v=4"
+    },
+    "createdAt": 1734509132291,
+    "id": "bf624f28-fdd7-42a1-97ea-22ff95101d5a",
+    "status": "seen",
+    "text": "Consectetur laboriosam autem ex saepe cupiditate minima aperiam.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Jane",
+      "id": "06c33e8b-e835-4736-80f4-63f44b66666c",
+      "imageUrl": "https://avatars.githubusercontent.com/u/33809426?v=4"
+    },
+    "createdAt": 1734509132290,
+    "id": "a9b2e097-7318-4e7d-8402-e85a51128854",
+    "status": "seen",
+    "text": "Eligendi vitae totam aliquam tempore.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Jane",
+      "id": "06c33e8b-e835-4736-80f4-63f44b66666c",
+      "imageUrl": "https://avatars.githubusercontent.com/u/33809426?v=4"
+    },
+    "createdAt": 1734509132289,
+    "id": "17117c5f-fcc8-4f4b-88f3-65fdad8c0f74",
+    "status": "seen",
+    "text": "Et libero inventore assumenda possimus dolor porro.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "John",
+      "id": "b4878b96-efbc-479a-8291-474ef323dec7",
+      "imageUrl": "https://avatars.githubusercontent.com/u/14123304?v=4"
+    },
+    "createdAt": 1734509132288,
+    "id": "2177087f-342e-4b8c-8106-e286a8c0b59d",
+    "status": "seen",
+    "text": "Expedita ipsum illum minus repellendus quis officia omnis.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "John",
+      "id": "b4878b96-efbc-479a-8291-474ef323dec7",
+      "imageUrl": "https://avatars.githubusercontent.com/u/14123304?v=4"
+    },
+    "createdAt": 1734509132287,
+    "id": "29cce6e7-1de3-43c2-9943-2913eede3fec",
+    "status": "seen",
+    "text": "Aspernatur commodi facere quibusdam voluptas praesentium ex.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Jane",
+      "id": "06c33e8b-e835-4736-80f4-63f44b66666c",
+      "imageUrl": "https://avatars.githubusercontent.com/u/33809426?v=4"
+    },
+    "createdAt": 1734509132286,
+    "id": "78b146df-1eb8-43f1-b7d4-d1f5cfc81d69",
+    "status": "seen",
+    "text": "Et omnis corrupti. Labore sunt quia occaecati doloremque fugit quas quia. Et est sed velit eum id. Earum eos architecto enim commodi minima modi.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Jane",
+      "id": "06c33e8b-e835-4736-80f4-63f44b66666c",
+      "imageUrl": "https://avatars.githubusercontent.com/u/33809426?v=4"
+    },
+    "createdAt": 1734509132285,
+    "id": "3db2e51e-af9c-42f3-9c7b-e80441fa8cbc",
+    "status": "seen",
+    "text": "Est voluptates magni et qui.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "John",
+      "id": "b4878b96-efbc-479a-8291-474ef323dec7",
+      "imageUrl": "https://avatars.githubusercontent.com/u/14123304?v=4"
+    },
+    "createdAt": 1734509132284,
+    "id": "a6b72fd5-35e9-493a-8768-4d41af01e938",
+    "status": "seen",
+    "text": "Nemo eos consequuntur dolor sint necessitatibus rerum quaerat voluptatibus temporibus.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Jane",
+      "id": "06c33e8b-e835-4736-80f4-63f44b66666c",
+      "imageUrl": "https://avatars.githubusercontent.com/u/33809426?v=4"
+    },
+    "createdAt": 1734509132283,
+    "id": "1fee0442-f339-4cd3-a84e-0c24c162f2ef",
+    "status": "seen",
+    "text": "Laboriosam quis velit suscipit quisquam. Dolor aspernatur dolores aperiam laudantium quia exercitationem aspernatur. Temporibus delectus earum. Non inventore nulla aut. Soluta eaque est et. Perferendis magnam blanditiis tenetur et facilis dolorem sed et.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "John",
+      "id": "b4878b96-efbc-479a-8291-474ef323dec7",
+      "imageUrl": "https://avatars.githubusercontent.com/u/14123304?v=4"
+    },
+    "createdAt": 1734509132282,
+    "id": "60ad9f01-965d-4ad9-8fb2-b8d152d74b1c",
+    "status": "seen",
+    "text": "Aliquam fuga sit exercitationem ipsa placeat ex aspernatur quas. Dolorem tempore cupiditate sint et culpa. Id quo officiis explicabo tempora libero aspernatur veritatis perferendis. Illo laudantium deleniti itaque et sed alias optio placeat dolor.",
+    "type": "text"
+  }
+]
