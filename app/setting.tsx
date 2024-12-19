@@ -1,12 +1,12 @@
 import { Link } from "expo-router";
-import { View, Text,StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
-export default function About() {
+export default function Home() {
   return (
     <View>
-      <View><Text>about</Text></View>
-      <Link href="/" style={styles.button}>
-        Go to Home screen
+      <View><Text>hello</Text></View>
+      <Link href="/chat" style={styles.button}>
+        Go to About screen
       </Link>
     </View>
   );
