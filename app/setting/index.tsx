@@ -1,52 +1,64 @@
-import ListItem from '@/components/ListItem';
+import styles from '@/styles/style';
 import { router } from 'expo-router';
 import * as React from 'react';
 import { View } from 'react-native';
-import { Divider, Text, TextInput } from 'react-native-paper';
+import { List, TextInput } from 'react-native-paper';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Setting = () => {
   const [text, setText] = React.useState("");
 
   return (
-    <View>
+    <View style={[styles["px-4"],styles["mt-4"]]}>
       <TextInput
         mode="outlined"
         label="主机地址"
-        placeholder="Type something"
-        right={<TextInput.Affix text="/100" />}
-        left={<TextInput.Affix text="/100" />}
+        placeholder="host"
+        left={<TextInput.Icon icon="plus" />}
+        right={<TextInput.Icon icon="content-save" />}
+
       />
-      <Divider />
-      <ListItem title="titleLarge" onPress={() => {
-        router.push("/setting/assistant")
+      <List.Section>
+        <List.Item
+          title="First Item"
+          left={() => <List.Icon icon="folder" />}
+          onPress={() => {
+            router.push("/setting/assistant")
+          }}
+        />
+        <List.Item
+          title="First Item"
+          left={() => <List.Icon icon="folder" />}
+          onPress={() => {
+            router.push("/setting/interface")
 
-      }} />
-      <Divider />
-      <ListItem title="titleLarge" onPress={() => {
-        router.push("/setting/interface")
+          }}
+        />
+        <List.Item
+          title="First Item"
+          left={() => <List.Icon icon="folder" />}
+          onPress={() => {
+            router.push("/setting/export")
 
-      }} />
-      <Divider />
-      <ListItem title="titleLarge" onPress={() => {
-        router.push("/setting/export")
+          }}
+        />
+        <List.Item
+          title="First Item"
+          left={() => <List.Icon icon="folder" />}
+          onPress={() => {
+            router.push("/setting/about")
 
-      }} />
-      <Divider />
-      <ListItem title="titleLarge" onPress={() => {
-        router.push("/setting/about")
+          }}
+        />
+        <List.Item
+          title="First Item"
+          left={() => <List.Icon icon="folder" />}
+          onPress={() => {
+            router.push("/setting/assistant")
 
-      }} />
-      <Divider />
-      <ListItem title="titleLarge" onPress={() => {
-        router.push("/setting/assistant")
-
-      }} />
-      <Divider />
-      <ListItem title="titleLarge" onPress={() => {
-        router.push("/setting/assistant")
-
-      }} />
-      <Divider />
+          }}
+        />
+      </List.Section>
     </View>
   );
 };

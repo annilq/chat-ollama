@@ -3,11 +3,7 @@ import { MenuIcon } from '@/components/MenuIcon';
 
 export default function SettingLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerLeft: undefined
-      }}
-    >
+    <Stack>
       <Stack.Screen 
         name="index" 
         options={{ 
