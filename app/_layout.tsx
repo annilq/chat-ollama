@@ -1,7 +1,7 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { PaperProvider, MD3LightTheme as DefaultTheme, } from 'react-native-paper';
+import { PaperProvider, MD3LightTheme as DefaultTheme, useTheme, } from 'react-native-paper';
 
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContent } from "@/components/DrawerContent";
@@ -14,12 +14,17 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#000000',
-    background:"#ffffff"
+    background: "#ffffff"
   },
 };
+
+export type AppTheme = typeof theme;
+
+export const useAppTheme = () => useTheme<AppTheme>();
+
 export default function RootLayout() {
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{ backgroundColor: '#FFFFFF' }}>
       <PaperProvider theme={theme}>
         <ActionSheetProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>

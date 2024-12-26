@@ -5,7 +5,7 @@ function DrawerHeader() {
   return (
     <View style={styles.header}>
       <Image
-        source={require('../assets/images/logo.png')} // 使用 require 引用本地图片
+        source={require('../assets/images/logo.png')} 
         style={styles.image}
       />
       <Text>Ollama</Text>

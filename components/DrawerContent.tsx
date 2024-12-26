@@ -14,7 +14,6 @@ export function DrawerContent(props: DrawerContentComponentProps) {
       <DrawerItemList {...props} />
       <Divider />
       <ChatList {...props} />
-
     </DrawerContentScrollView>
   );
 }

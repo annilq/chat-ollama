@@ -1,20 +1,29 @@
 import { Stack } from 'expo-router';
 import { MenuIcon } from '@/components/MenuIcon';
+import { useAppTheme } from '../_layout';
 
 export default function SettingLayout() {
+  const {
+    colors: { background },
+  } = useAppTheme();
+
   return (
-    <Stack>
-      <Stack.Screen 
-        name="index" 
-        options={{ 
-          title: '设置',
+    <Stack
+      screenOptions={{
+        contentStyle: { backgroundColor: background }
+      }}
+    >
+      <Stack.Screen
+        name="index"
+        options={{
+          title: 'setting',
           headerLeft: () => <MenuIcon />
-        }} 
+        }}
       />
-      <Stack.Screen name="assistant" options={{ title: '助手' }} />
-      <Stack.Screen name="interface" options={{ title: '界面' }} />
-      <Stack.Screen name="export" options={{ title: '导出' }} />
-      <Stack.Screen name="about" options={{ title: '关于' }} />
+      <Stack.Screen name="assistant" options={{ title: 'assistant' }} />
+      <Stack.Screen name="interface" options={{ title: 'interface' }} />
+      <Stack.Screen name="export" options={{ title: 'export' }} />
+      <Stack.Screen name="about" options={{ title: 'about' }} />
     </Stack>
   );
 }
