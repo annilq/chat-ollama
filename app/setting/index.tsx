@@ -1,24 +1,49 @@
-import styles from '@/styles/style';
+import styles, { getStyles } from '@/styles/style';
 import { router } from 'expo-router';
 import * as React from 'react';
-import { StyleProp, View } from 'react-native';
-import { Divider, List, TextInput } from 'react-native-paper';
+import { StyleProp, View, Text } from 'react-native';
+import { List, TextInput } from 'react-native-paper';
+import { useAppTheme } from '../_layout';
+import Divider from '@/components/Divider';
 
 const listItemStyle: StyleProp<any> = { paddingHorizontal: 6, borderRadius: 6, overflow: "hidden" }
 
 const Setting = () => {
   const [text, setText] = React.useState("");
+  const [error, setError] = React.useState<string | null>(null);
 
+  const {
+    colors: { error: errorColor },
+  } = useAppTheme();
+
+  const validateInput = (input: string) => {
+    if (input.trim() === "") {
+      setError("invalid_host");
+      return false;
+    }
+    setError(null);
+    return true;
+  };
+
+  const handleTextChange = (input: string) => {
+    setText(input);
+    validateInput(input);
+  };
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
       <TextInput
+        value={text}
+        onChangeText={handleTextChange}
         mode="outlined"
         label="host"
         placeholder="host"
-        left={<TextInput.Icon icon="plus" />}
-        right={<TextInput.Icon icon="content-save" />}
+        error={!!error}
+        left={<TextInput.Icon icon="plus" color={error ? errorColor : undefined} />}
+        right={<TextInput.Icon icon="content-save" color={error ? errorColor : undefined} />}
       />
+      {error && <Text style={[getStyles("py-4"), { color: errorColor }]}>{error}</Text>}
+
       <Divider />
       <List.Section>
         <List.Item

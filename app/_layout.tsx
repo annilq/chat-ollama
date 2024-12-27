@@ -13,6 +13,7 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
+    outline: "#000000",
     primary: '#000000',
     background: "#ffffff"
   },
@@ -46,7 +47,7 @@ export default function RootLayout() {
                   drawerLabelStyle: {
                     color: "current"
                   },
-                  title: 'Add',
+                  title: 'New Chat',
                   headerShown: true,
                   drawerIcon: ({ focused, size, color }) => (
                     <Ionicons

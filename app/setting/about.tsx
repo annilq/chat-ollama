@@ -1,8 +1,9 @@
 import styles from '@/styles/style';
 import * as React from 'react';
 import { View } from 'react-native';
-import { Divider, List } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Divider from '@/components/Divider';
 
 export default () => {
 
@@ -15,7 +16,7 @@ export default () => {
           onPress={() => {
           }}
         />
-        <Divider style={{ marginVertical: 20 }} />
+        <Divider  />
         <List.Item
           title="github"
           left={() => <List.Icon icon="github" />}

@@ -1,16 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Divider } from 'react-native-paper';
 
-const Divider = () => {
-  return <View style={styles.divider} />;
+export default () => {
+  return <Divider bold style={{ backgroundColor: "#000000", marginVertical: 20 }} />;
 };
-
-const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-    backgroundColor: '#efefef',
-    marginVertical: 6,
-  },
-});
-
-export default Divider;

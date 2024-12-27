@@ -2,7 +2,8 @@ import styles from '@/styles/style';
 import * as React from 'react';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Divider, Switch, List, SegmentedButtons } from 'react-native-paper';
+import { Switch, List, SegmentedButtons } from 'react-native-paper';
+import Divider from '@/components/Divider';
 
 export default () => {
   const [isSystemHelpSwitchOn, setIsSystemHelpSwitchOn] = useState(false);
@@ -28,7 +29,7 @@ export default () => {
           right={(props) => <Switch {...props} value={isSystemHelpSwitchOn} onValueChange={setIsSystemHelpSwitchOn} />}
         />
 
-        <Divider style={{ marginVertical: 20 }} />
+        <Divider  />
 
         <SegmentedButtons
           value={value}
@@ -61,7 +62,7 @@ export default () => {
           right={(props) => <Switch {...props} value={isSystemHelpSwitchOn} onValueChange={setIsSystemHelpSwitchOn} />}
         />
 
-        <Divider style={{ marginVertical: 20 }} />
+        <Divider  />
 
         <List.Item
           title="always keep preload model"

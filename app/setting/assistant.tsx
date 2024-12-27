@@ -2,7 +2,7 @@ import styles from '@/styles/style';
 import * as React from 'react';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Divider, TextInput, Switch, List } from 'react-native-paper';
+import { TextInput, Switch, List } from 'react-native-paper';
 
 export default () => {
   const [value, setValue] = useState("You are a helpful assistant")
@@ -23,7 +23,6 @@ export default () => {
         textAlignVertical='top'
         right={<TextInput.Icon icon="content-save" />}
       />
-      <Divider />
       <List.Section>
         <List.Item
           title="Use system help"
