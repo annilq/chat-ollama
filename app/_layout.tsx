@@ -8,6 +8,7 @@ import { DrawerContent } from "@/components/DrawerContent";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { expo } from '../app.json';
 import { AppRegistry } from "react-native";
+import { ChatHeader } from '@/components/ChatHeader';
 
 const theme = {
   ...DefaultTheme,
@@ -49,13 +50,13 @@ export default function RootLayout() {
                   },
                   title: 'New Chat',
                   headerShown: true,
+                  header: () => <ChatHeader />,
                   drawerIcon: ({ focused, size, color }) => (
                     <Ionicons
                       name="add"
                       size={size}
                     />
                   ),
-                  // headerLeft: () => <MenuIcon />
                 }} />
               <Drawer.Screen
                 name="setting"
