@@ -179,4 +179,7 @@ const styles = StyleSheet.create({
   ...createFlexboxUtils(),
 });
 
+export const getStyles = (listString: string) => {
+  return listString.split(" ").map(item => styles[item])
+}
 export default styles;

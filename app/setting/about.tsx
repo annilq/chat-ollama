@@ -1,58 +1,37 @@
 import styles from '@/styles/style';
-import { router } from 'expo-router';
 import * as React from 'react';
 import { View } from 'react-native';
-import { Divider, List, TextInput } from 'react-native-paper';
+import { Divider, List } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default () => {
-  const [text, setText] = React.useState("");
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
-      <TextInput
-        mode="outlined"
-        label="host"
-        placeholder="host"
-        left={<TextInput.Icon icon="plus" />}
-        right={<TextInput.Icon icon="content-save" />}
-      />
-      <Divider />
       <List.Section>
         <List.Item
-          title="brain"
-          left={() => <List.Icon icon="head-cog" />}
+          title="Ollama App"
+          left={() => <Icon name="verified" size={24} />}
           onPress={() => {
-            router.push("/setting/assistant")
+          }}
+        />
+        <Divider style={{ marginVertical: 20 }} />
+        <List.Item
+          title="github"
+          left={() => <List.Icon icon="github" />}
+          onPress={() => {
           }}
         />
         <List.Item
-          title="interface"
-          left={() => <List.Icon icon="card-outline" />}
+          title="issue"
+          left={() => <List.Icon icon="information" />}
           onPress={() => {
-            router.push("/setting/interface")
-
           }}
         />
         <List.Item
-          title="headphones"
-          left={() => <List.Icon icon="headphones" />}
+          title="license"
+          left={() => <List.Icon icon="license" />}
           onPress={() => {
-            router.push("/setting/export")
-          }}
-        />
-        <List.Item
-          title="export"
-          left={() => <List.Icon icon="share-variant" />}
-          onPress={() => {
-            router.push("/setting/about")
-          }}
-        />
-        <List.Item
-          title="about"
-          left={() => <List.Icon icon="help-circle" />}
-          onPress={() => {
-            router.push("/setting/assistant")
-
           }}
         />
       </List.Section>

@@ -1,59 +1,75 @@
 import styles from '@/styles/style';
-import { router } from 'expo-router';
 import * as React from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
-import { Divider, List, TextInput } from 'react-native-paper';
+import { Divider, Switch, List, SegmentedButtons } from 'react-native-paper';
 
 export default () => {
-  const [text, setText] = React.useState("");
+  const [isSystemHelpSwitchOn, setIsSystemHelpSwitchOn] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [value, setValue] = useState("stream");
+
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
-      <TextInput
-        mode="outlined"
-        label="host"
-        placeholder="host"
-        left={<TextInput.Icon icon="plus" />}
-        right={<TextInput.Icon icon="content-save" />}
-      />
-      <Divider />
       <List.Section>
         <List.Item
-          title="brain"
-          left={() => <List.Icon icon="head-cog" />}
-          onPress={() => {
-            router.push("/setting/assistant")
-          }}
+          title="show model tags"
+          right={(props) => <Switch {...props} value={isSystemHelpSwitchOn} onValueChange={setIsSystemHelpSwitchOn} />}
         />
         <List.Item
-          title="interface"
-          left={() => <List.Icon icon="card-outline" />}
-          onPress={() => {
-            router.push("/setting/interface")
+          title="preload model"
+          right={(props) => <Switch {...props} value={isSwitchOn} onValueChange={onToggleSwitch} />}
+        />
 
-          }}
-        />
         <List.Item
-          title="headphones"
-          left={() => <List.Icon icon="headphones" />}
-          onPress={() => {
-            router.push("/setting/export")
-          }}
+          title="reset when model change"
+          right={(props) => <Switch {...props} value={isSystemHelpSwitchOn} onValueChange={setIsSystemHelpSwitchOn} />}
         />
-        <List.Item
-          title="export"
-          left={() => <List.Icon icon="share-variant" />}
-          onPress={() => {
-            router.push("/setting/about")
-          }}
-        />
-        <List.Item
-          title="about"
-          left={() => <List.Icon icon="help-circle" />}
-          onPress={() => {
-            router.push("/setting/assistant")
 
-          }}
+        <Divider style={{ marginVertical: 20 }} />
+
+        <SegmentedButtons
+          value={value}
+          onValueChange={setValue}
+          buttons={[
+            {
+              value: 'stream',
+              label: 'stream',
+            },
+            {
+              value: 'generate',
+              label: 'generate',
+            },
+          ]}
+        />
+        <List.Item
+          title="generate title"
+          right={(props) => <Switch {...props} value={isSwitchOn} onValueChange={onToggleSwitch} />}
+        />
+        <List.Item
+          title="enable message edit"
+          right={(props) => <Switch {...props} value={isSystemHelpSwitchOn} onValueChange={setIsSystemHelpSwitchOn} />}
+        />
+        <List.Item
+          title="enable delete message promote"
+          right={(props) => <Switch {...props} value={isSwitchOn} onValueChange={onToggleSwitch} />}
+        />
+        <List.Item
+          title="show tip in sidebar"
+          right={(props) => <Switch {...props} value={isSystemHelpSwitchOn} onValueChange={setIsSystemHelpSwitchOn} />}
+        />
+
+        <Divider style={{ marginVertical: 20 }} />
+
+        <List.Item
+          title="always keep preload model"
+          right={(props) => <Switch {...props} value={isSwitchOn} onValueChange={onToggleSwitch} />}
+        />
+        <List.Item
+          title="do not keep preload model"
+          right={(props) => <Switch {...props} value={isSwitchOn} onValueChange={onToggleSwitch} />}
         />
       </List.Section>
     </View>
