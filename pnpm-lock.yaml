@@ -20,6 +20,12 @@ importers:
       '@flyerhq/react-native-link-preview':
         specifier: ^1.6.0
         version: 1.6.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
+      '@gorhom/bottom-sheet':
+        specifier: ^5
+        version: 5.0.6(@types/react@18.3.18)(react-native-gesture-handler@2.20.2(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native-reanimated@3.16.6(@babel/core@7.26.0)(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
+      '@gorhom/portal':
+        specifier: ^1.0.14
+        version: 1.0.14(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
       '@react-native-async-storage/async-storage':
         specifier: 1.23.1
         version: 1.23.1(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))
@@ -1003,6 +1009,27 @@ packages:
 
   '@flyerhq/react-native-link-preview@1.6.0':
     resolution: {integrity: sha512-MY2Kxlf3SzLVUAuGU2LXhDU0a2icNBWL7MDCA8BNpmKqsWI+tHjX3mHm5nGpsLweYG5wsajzBd5XS0KCXNPkJA==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+
+  '@gorhom/bottom-sheet@5.0.6':
+    resolution: {integrity: sha512-SI/AhPvgRfnCWN6/+wbE6TXwRE4X8F2fLyE4L/0bRwgE34Zenq585qLT139uEcfCIyovC2swC3ICqQpkmWEcFA==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-native': '*'
+      react: '*'
+      react-native: '*'
+      react-native-gesture-handler: '>=2.16.1'
+      react-native-reanimated: '>=3.16.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-native':
+        optional: true
+
+  '@gorhom/portal@1.0.14':
+    resolution: {integrity: sha512-MXyL4xvCjmgaORr/rtryDNFy3kU4qUbKlwtQqqsygd0xX3mhKjOLn6mQK8wfu0RkoE0pBE0nAasRoHua+/QZ7A==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -6276,6 +6303,23 @@ snapshots:
   '@flyerhq/react-native-link-preview@1.6.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)':
     dependencies:
       html-entities: 2.5.2
+      react: 18.3.1
+      react-native: 0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1)
+
+  '@gorhom/bottom-sheet@5.0.6(@types/react@18.3.18)(react-native-gesture-handler@2.20.2(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native-reanimated@3.16.6(@babel/core@7.26.0)(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@gorhom/portal': 1.0.14(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
+      invariant: 2.2.4
+      react: 18.3.1
+      react-native: 0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1)
+      react-native-gesture-handler: 2.20.2(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
+      react-native-reanimated: 3.16.6(@babel/core@7.26.0)(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.18
+
+  '@gorhom/portal@1.0.14(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      nanoid: 3.3.8
       react: 18.3.1
       react-native: 0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1)
 

@@ -2,6 +2,7 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider, MD3LightTheme as DefaultTheme, useTheme, } from 'react-native-paper';
+import { PortalProvider } from '@gorhom/portal';
 
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContent } from "@/components/DrawerContent";
@@ -30,49 +31,51 @@ export default function RootLayout() {
       <PaperProvider theme={theme}>
         <ActionSheetProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <Drawer
-              screenOptions={{
-                drawerStyle: {
-                  width: 240
-                },
-                drawerItemStyle: {
-                  backgroundColor: 'transparent',
-                },
-                headerShown: false,
-              }}
-              drawerContent={(props) => <DrawerContent {...props} />}
-            >
-              <Drawer.Screen
-                name="index"
-                options={{
-                  drawerLabelStyle: {
-                    color: "current"
+            <PortalProvider>
+              <Drawer
+                screenOptions={{
+                  drawerStyle: {
+                    width: 240
                   },
-                  title: 'New Chat',
-                  headerShown: true,
-                  header: () => <ChatHeader />,
-                  drawerIcon: ({ focused, size, color }) => (
-                    <Ionicons
-                      name="add"
-                      size={size}
-                    />
-                  ),
-                }} />
-              <Drawer.Screen
-                name="setting"
-                options={{
-                  drawerLabelStyle: {
-                    color: "current"
+                  drawerItemStyle: {
+                    backgroundColor: 'transparent',
                   },
-                  title: 'Setting',
-                  drawerIcon: ({ focused, size, color }) => (
-                    <Ionicons
-                      name="settings-outline"
-                      size={size}
-                    />
-                  )
-                }} />
-            </Drawer>
+                  headerShown: false,
+                }}
+                drawerContent={(props) => <DrawerContent {...props} />}
+              >
+                <Drawer.Screen
+                  name="index"
+                  options={{
+                    drawerLabelStyle: {
+                      color: "current"
+                    },
+                    title: 'New Chat',
+                    headerShown: true,
+                    header: () => <ChatHeader />,
+                    drawerIcon: ({ focused, size, color }) => (
+                      <Ionicons
+                        name="add"
+                        size={size}
+                      />
+                    ),
+                  }} />
+                <Drawer.Screen
+                  name="setting"
+                  options={{
+                    drawerLabelStyle: {
+                      color: "current"
+                    },
+                    title: 'Setting',
+                    drawerIcon: ({ focused, size, color }) => (
+                      <Ionicons
+                        name="settings-outline"
+                        size={size}
+                      />
+                    )
+                  }} />
+              </Drawer>
+            </PortalProvider>
           </GestureHandlerRootView>
         </ActionSheetProvider>
       </PaperProvider>
