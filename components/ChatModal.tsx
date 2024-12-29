@@ -1,14 +1,14 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { IconButton, Text, TouchableRipple } from 'react-native-paper';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Button, IconButton, Text, TouchableRipple } from 'react-native-paper';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
+import ollama, { ModelInfo } from '@/chatutil/Ollama';
 
 export const ChatModal = () => {
-
 	const bottomSheetRef = useRef<BottomSheet>(null);
+	const [models, setModels] = useState<ModelInfo[]>([]);
 
-	// 底部菜单的固定点位
 	const snapPoints = useMemo(() => ['25%'], []);
 
 	const handleMenuPress = useCallback(() => {
@@ -21,26 +21,33 @@ export const ChatModal = () => {
 				{...props}
 				appearsOnIndex={0}
 				disappearsOnIndex={-1}
+				pressBehavior="close"
 			/>
 		),
 		[]
 	);
 
 	const handleSheetChange = useCallback((index: number) => {
-		// 处理底部菜单状态变化
+		console.log('bottomSheet index changed:', index);
 	}, []);
 
 	const handleMenuItemPress = useCallback((action: string) => {
 		bottomSheetRef.current?.close();
 		switch (action) {
 			case 'new':
-				// 处理新对话
+				console.log('New chat');
 				break;
 			case 'continue':
-				// 处理继续对话
+				console.log('Continue chat');
 				break;
 		}
 	}, []);
+
+	useEffect(() => {
+		ollama.list().then(res => {
+			setModels(res.models)
+		})
+	}, [])
 
 	return (
 		<>
@@ -58,21 +65,16 @@ export const ChatModal = () => {
 					onChange={handleSheetChange}
 					backdropComponent={renderBackdrop}
 					enablePanDownToClose
+					handleStyle={styles.handleStyle}
 				>
-					<View style={styles.bottomSheetContent}>
-						<TouchableRipple
-							onPress={() => handleMenuItemPress('new')}
-							style={styles.menuItem}
-						>
-							<Text>新对话</Text>
-						</TouchableRipple>
-						<TouchableRipple
-							onPress={() => handleMenuItemPress('continue')}
-							style={styles.menuItem}
-						>
-							<Text>继续对话</Text>
-						</TouchableRipple>
-					</View>
+					<BottomSheetView style={styles.bottomSheetContent}>
+						{models.map(model => (
+							<Button key={model.name} mode="outlined" onPress={() => handleMenuItemPress('Pressed')}>
+								{model.name}
+							</Button>
+						))}
+
+					</BottomSheetView>
 				</BottomSheet>
 			</Portal>
 		</>
@@ -81,7 +83,10 @@ export const ChatModal = () => {
 
 const styles = StyleSheet.create({
 	bottomSheetContent: {
+		gap: 8,
 		flex: 1,
+		flexWrap:"wrap",
+		flexDirection: "row",
 		paddingHorizontal: 16,
 	},
 	menuItem: {
@@ -89,4 +94,9 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderBottomColor: '#e0e0e0',
 	},
-}); 
+	handleStyle: {
+		backgroundColor: '#fff',
+		borderTopLeftRadius: 15,
+		borderTopRightRadius: 15,
+	},
+});
