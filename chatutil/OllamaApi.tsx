@@ -1,8 +1,14 @@
 
 // Types for API responses and requests
 
+export enum MessageRole {
+  USER = 'user',
+  SYSTEM = 'system',
+  ASSISTANT = 'assistant'
+}
+
 export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
+  role: MessageRole;
   content: string;
 }
 
@@ -163,5 +169,7 @@ class OllamaAPI {
     }
   }
 }
+
+export const ollama = new OllamaAPI();
 
 export default OllamaAPI;
