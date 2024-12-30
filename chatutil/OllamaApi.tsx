@@ -1,4 +1,6 @@
+
 // Types for API responses and requests
+
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -143,37 +145,23 @@ class OllamaAPI {
       body: JSON.stringify({ name: modelName, modelfile }),
     });
   }
+
+  async checkHealth(timeout: number = 5000): Promise<boolean> {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      const response = await fetch(`${this.baseURL}/api/version`, {
+        signal: controller.signal,
+        method: 'GET',
+      });
+
+      clearTimeout(timeoutId);
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
-
-
-// // 初始化客户端
-const ollama = new OllamaAPI('http://localhost:11434');
-
-// // 聊天示例
-// const chatResponse = await ollama.chat({
-//   model: 'llama2',
-//   messages: [
-//     { role: 'user', content: 'Hello, how are you?' }
-//   ]
-// });
-
-// // 生成文本
-// const generateResponse = await ollama.generate({
-//   model: 'llama2',
-//   prompt: 'Write a story about a space adventure'
-// });
-
-// // 列出所有模型
-// const models = await ollama.list();
-
-// // 下载新模型
-// await ollama.pull({
-//   name: 'llama2'
-// });
-
-// // 获取模型信息
-// const modelInfo = await ollama.modelInfo('llama2');
-
-
-export default ollama;
+export default OllamaAPI;

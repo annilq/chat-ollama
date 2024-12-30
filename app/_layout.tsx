@@ -10,6 +10,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { expo } from '../app.json';
 import { AppRegistry } from "react-native";
 import { ChatHeader } from '@/components/ChatHeader';
+import { OllamaProvider } from "@/chatutil/OllamaContext";
 
 const theme = {
   ...DefaultTheme,
@@ -31,51 +32,53 @@ export default function RootLayout() {
       <PaperProvider theme={theme}>
         <ActionSheetProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <PortalProvider>
-              <Drawer
-                screenOptions={{
-                  drawerStyle: {
-                    width: 240
-                  },
-                  drawerItemStyle: {
-                    backgroundColor: 'transparent',
-                  },
-                  headerShown: false,
-                }}
-                drawerContent={(props) => <DrawerContent {...props} />}
-              >
-                <Drawer.Screen
-                  name="index"
-                  options={{
-                    drawerLabelStyle: {
-                      color: "current"
+            <OllamaProvider>
+              <PortalProvider>
+                <Drawer
+                  screenOptions={{
+                    drawerStyle: {
+                      width: 240
                     },
-                    title: 'New Chat',
-                    headerShown: true,
-                    header: () => <ChatHeader />,
-                    drawerIcon: ({ focused, size, color }) => (
-                      <Ionicons
-                        name="add"
-                        size={size}
-                      />
-                    ),
-                  }} />
-                <Drawer.Screen
-                  name="setting"
-                  options={{
-                    drawerLabelStyle: {
-                      color: "current"
+                    drawerItemStyle: {
+                      backgroundColor: 'transparent',
                     },
-                    title: 'Setting',
-                    drawerIcon: ({ focused, size, color }) => (
-                      <Ionicons
-                        name="settings-outline"
-                        size={size}
-                      />
-                    )
-                  }} />
-              </Drawer>
-            </PortalProvider>
+                    headerShown: false,
+                  }}
+                  drawerContent={(props) => <DrawerContent {...props} />}
+                >
+                  <Drawer.Screen
+                    name="index"
+                    options={{
+                      drawerLabelStyle: {
+                        color: "current"
+                      },
+                      title: 'New Chat',
+                      headerShown: true,
+                      header: () => <ChatHeader />,
+                      drawerIcon: ({ focused, size, color }) => (
+                        <Ionicons
+                          name="add"
+                          size={size}
+                        />
+                      ),
+                    }} />
+                  <Drawer.Screen
+                    name="setting"
+                    options={{
+                      drawerLabelStyle: {
+                        color: "current"
+                      },
+                      title: 'Setting',
+                      drawerIcon: ({ focused, size, color }) => (
+                        <Ionicons
+                          name="settings-outline"
+                          size={size}
+                        />
+                      )
+                    }} />
+                </Drawer>
+              </PortalProvider>
+            </OllamaProvider>
           </GestureHandlerRootView>
         </ActionSheetProvider>
       </PaperProvider>

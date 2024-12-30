@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
-import { Button, IconButton, Text, TouchableRipple } from 'react-native-paper';
+import { Button, IconButton } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
-import ollama, { ModelInfo } from '@/chatutil/Ollama';
+import { useOllama } from '@/chatutil/OllamaContext';
 
 export const ChatModal = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const [models, setModels] = useState<ModelInfo[]>([]);
-
+	const { models } = useOllama()
 	const snapPoints = useMemo(() => ['25%'], []);
 
 	const handleMenuPress = useCallback(() => {
@@ -42,12 +41,6 @@ export const ChatModal = () => {
 				break;
 		}
 	}, []);
-
-	useEffect(() => {
-		ollama.list().then(res => {
-			setModels(res.models)
-		})
-	}, [])
 
 	return (
 		<>
@@ -85,7 +78,7 @@ const styles = StyleSheet.create({
 	bottomSheetContent: {
 		gap: 8,
 		flex: 1,
-		flexWrap:"wrap",
+		flexWrap: "wrap",
 		flexDirection: "row",
 		paddingHorizontal: 16,
 	},
