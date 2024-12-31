@@ -1,13 +1,15 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button, IconButton } from 'react-native-paper';
+import { StyleSheet, Text } from 'react-native';
+import { Button } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
 import { useOllama } from '@/chatutil/OllamaContext';
 
+const getModelName = (name: string) => name?.split(":")[0]
+
 export const ChatModal = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const { models } = useOllama()
+	const { models, selectedModel, setSelectedModel } = useOllama()
 	const snapPoints = useMemo(() => ['25%'], []);
 
 	const handleMenuPress = useCallback(() => {
@@ -30,26 +32,16 @@ export const ChatModal = () => {
 		console.log('bottomSheet index changed:', index);
 	}, []);
 
-	const handleMenuItemPress = useCallback((action: string) => {
-		bottomSheetRef.current?.close();
-		switch (action) {
-			case 'new':
-				console.log('New chat');
-				break;
-			case 'continue':
-				console.log('Continue chat');
-				break;
-		}
+	const handleMenuItemPress = useCallback((modelName: string) => {
+		// bottomSheetRef.current?.close();
+		setSelectedModel(modelName)
 	}, []);
 
 	return (
 		<>
-			<IconButton
-				icon="chevron-down"
-				size={24}
-				onPress={handleMenuPress}
-			/>
-
+			<Button mode={"text"} onPress={handleMenuPress} icon="chevron-down"	>
+				{selectedModel ? <Text>{getModelName(selectedModel)}</Text> : <Text>select Model</Text>}
+			</Button>
 			<Portal>
 				<BottomSheet
 					ref={bottomSheetRef}
@@ -62,11 +54,13 @@ export const ChatModal = () => {
 				>
 					<BottomSheetView style={styles.bottomSheetContent}>
 						{models.map(model => (
-							<Button key={model.name} mode="outlined" onPress={() => handleMenuItemPress('Pressed')}>
-								{model.name}
+							<Button key={model.name} icon={selectedModel === model.name ? "check" : undefined} mode={selectedModel === model.name ? "contained" : "outlined"} onPress={() => handleMenuItemPress(model.name)}>
+								{getModelName(model.name)}
 							</Button>
 						))}
-
+						<Button icon={"plus"} mode={"outlined"} onPress={() => { }}>
+							add
+						</Button>
 					</BottomSheetView>
 				</BottomSheet>
 			</Portal>

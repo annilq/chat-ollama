@@ -41,7 +41,7 @@ const OllamaContext = createContext<OllamaContextValue | null>(null);
 export const OllamaProvider: React.FC<OllamaProviderProps> = ({ 
   children, 
   host = 'http://localhost:11434',
-  healthCheckInterval = 30000  // Check every 30 seconds by default
+  healthCheckInterval = 10000  // Check every 30 seconds by default
 }) => {
   const [state, setState] = useState<OllamaContextState>({
     models: [],

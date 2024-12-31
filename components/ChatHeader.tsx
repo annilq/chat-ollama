@@ -4,11 +4,12 @@ import { IconButton, } from 'react-native-paper';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatModal } from './ChatModal';
+import { useOllama } from '@/chatutil/OllamaContext';
 
 export const ChatHeader = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-
+  const { refreshModels } = useOllama()
   return (
     <>
       <View style={[styles.header, { paddingTop: insets.top }]}>
@@ -22,9 +23,7 @@ export const ChatHeader = () => {
           <IconButton
             icon="refresh"
             size={24}
-            onPress={() => {
-              // 处理刷新逻辑
-            }}
+            onPress={refreshModels}
           />
         </View>
       </View>
