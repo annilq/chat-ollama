@@ -4,12 +4,12 @@ import { IconButton, } from 'react-native-paper';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatModal } from './ChatModal';
-import { useOllama } from '@/chatutil/OllamaContext';
+import { useOllamaStore } from '@/store/useOllamaStore';
 
 export const ChatHeader = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { refreshModels } = useOllama()
+  const { refreshModels } = useOllamaStore()
   return (
     <>
       <View style={[styles.header, { paddingTop: insets.top }]}>

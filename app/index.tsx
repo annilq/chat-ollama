@@ -1,7 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import { Chat, MessageType, defaultTheme } from '@flyerhq/react-native-chat-ui'
 import { PreviewData } from '@flyerhq/react-native-link-preview'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker'
 import FileViewer from 'react-native-file-viewer'
 import * as ImagePicker from 'expo-image-picker';
@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import data from '../message.json'
 import { useSnackBarStore } from '@/store/useSnackbar'
+import { useOllamaStore } from '@/store/useOllamaStore'
 
 const App = () => {
   const snackState = useSnackBarStore()
@@ -123,6 +124,18 @@ const App = () => {
     snackState.setSnack({ visible: true, message: message.text })
   }
 
+  useEffect(() => {
+    const host = 'http://localhost:11434'; // You can make this configurable
+    useOllamaStore.getState().initialize(host);
+
+    // Set up health check interval
+    const interval = setInterval(() => {
+      useOllamaStore.getState().checkService();
+    }, 10000); // Check every 10 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <Chat
       messages={messages}

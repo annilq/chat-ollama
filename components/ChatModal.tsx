@@ -3,13 +3,13 @@ import { StyleSheet, Text } from 'react-native';
 import { Button } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
-import { useOllama } from '@/chatutil/OllamaContext';
+import { useOllamaStore } from '@/store/useOllamaStore';
 
 const getModelName = (name: string) => name?.split(":")[0]
 
 export const ChatModal = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const { models, selectedModel, setSelectedModel } = useOllama()
+	const { models, selectedModel, setSelectedModel } = useOllamaStore()
 	const snapPoints = useMemo(() => ['25%'], []);
 
 	const handleMenuPress = useCallback(() => {
