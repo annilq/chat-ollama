@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import OllamaAPI from '../chatutil/OllamaApi';
-import { ModelInfo } from '../chatutil/OllamaApi';
 import { useSnackBarStore } from './useSnackbar';
+import { ModelResponse } from "ollama";
 
 interface OllamaState {
-  models: ModelInfo[];
+  models: ModelResponse[];
   selectedModel: string | null;
   isLoading: boolean;
   error: Error | null;
@@ -16,7 +16,7 @@ interface OllamaState {
   refreshModels: () => Promise<void>;
   pullModel: (modelName: string) => Promise<void>;
   deleteModel: (modelName: string) => Promise<void>;
-  getModelInfo: (modelName: string) => Promise<ModelInfo>;
+  getModelInfo: (modelName: string) => Promise<ModelResponse>;
   checkService: () => Promise<boolean>;
   initialize: (host?: string) => void;
 }

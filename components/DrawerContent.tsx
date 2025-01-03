@@ -1,5 +1,4 @@
-import { DrawerContentScrollView, DrawerItemList, DrawerItem, DrawerContentComponentProps } from "@react-navigation/drawer";
-import { DrawerActions } from "@react-navigation/native";
+import { DrawerContentScrollView, DrawerItemList, DrawerContentComponentProps } from "@react-navigation/drawer";
 
 import Divider from "./Divider";
 import DrawerHeader from "./DrawerHeader";

@@ -1,45 +1,12 @@
 
 // Types for API responses and requests
 
+import { ChatResponse, ChatRequest, PullRequest, GenerateResponse, GenerateRequest, ListResponse, ModelResponse } from "ollama";
+
 export enum MessageRole {
   USER = 'user',
   SYSTEM = 'system',
   ASSISTANT = 'assistant'
-}
-
-export interface ChatMessage {
-  role: MessageRole;
-  content: string;
-}
-
-export interface ChatRequest {
-  model: string;
-  messages: ChatMessage[];
-  stream?: boolean;
-  format?: string;
-  options?: Record<string, any>;
-}
-
-export interface GenerateRequest {
-  model: string;
-  prompt: string;
-  stream?: boolean;
-  format?: string;
-  options?: Record<string, any>;
-}
-
-export interface ModelInfo {
-  name: string;
-  modified_at: string;
-  size: number;
-  digest: string;
-  details: Record<string, any>;
-}
-
-export interface PullRequest {
-  name: string;
-  insecure?: boolean;
-  stream?: boolean;
 }
 
 class OllamaAPI {
@@ -74,7 +41,7 @@ class OllamaAPI {
   /**
    * Chat with a model using message history
    */
-  async chat(request: ChatRequest): Promise<Response> {
+  async chat(request: ChatRequest): Promise<ChatResponse> {
     return this.fetchWithError('/api/chat', {
       method: 'POST',
       body: JSON.stringify(request),
@@ -84,7 +51,7 @@ class OllamaAPI {
   /**
    * Generate a response from a prompt
    */
-  async generate(request: GenerateRequest): Promise<Response> {
+  async generate(request: GenerateRequest): Promise<GenerateResponse> {
     return this.fetchWithError('/api/generate', {
       method: 'POST',
       body: JSON.stringify(request),
@@ -94,7 +61,7 @@ class OllamaAPI {
   /**
    * List all available models
    */
-  async list(): Promise<{ models: ModelInfo[] }> {
+  async list(): Promise<ListResponse> {
     const response = await this.fetchWithError('/api/tags', {
       method: 'GET',
     });
@@ -114,7 +81,7 @@ class OllamaAPI {
   /**
    * Get information about a specific model
    */
-  async modelInfo(modelName: string): Promise<ModelInfo> {
+  async modelInfo(modelName: string): Promise<ModelResponse> {
     const response = await this.fetchWithError('/api/show', {
       method: 'POST',
       body: JSON.stringify({ name: modelName }),
