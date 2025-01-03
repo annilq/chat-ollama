@@ -1,8 +1,6 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { PaperProvider, MD3LightTheme as DefaultTheme, useTheme, } from 'react-native-paper';
-import { PortalProvider } from '@gorhom/portal';
 
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContent } from "@/components/DrawerContent";
@@ -11,77 +9,63 @@ import { expo } from '../app.json';
 import { AppRegistry } from "react-native";
 import { ChatHeader } from '@/components/ChatHeader';
 import { OllamaProvider } from "@/chatutil/OllamaContext";
-
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    outline: "#000000",
-    primary: '#000000',
-    background: "#ffffff"
-  },
-};
-
-export type AppTheme = typeof theme;
-
-export const useAppTheme = () => useTheme<AppTheme>();
+import { PaperTheme } from "@/components/PaperTheme";
 
 export default function RootLayout() {
+
   return (
     <SafeAreaProvider style={{ backgroundColor: '#FFFFFF' }}>
-      <PaperProvider theme={theme}>
+      <OllamaProvider>
         <ActionSheetProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <OllamaProvider>
-              <PortalProvider>
-                <Drawer
-                  screenOptions={{
-                    drawerStyle: {
-                      width: 240
+            <PaperTheme>
+              <Drawer
+                screenOptions={{
+                  drawerStyle: {
+                    width: 240
+                  },
+                  drawerItemStyle: {
+                    backgroundColor: 'transparent',
+                  },
+                  headerShown: false,
+                }}
+                drawerContent={(props) => <DrawerContent {...props} />}
+              >
+                <Drawer.Screen
+                  name="index"
+                  options={{
+                    drawerLabelStyle: {
+                      color: "current"
                     },
-                    drawerItemStyle: {
-                      backgroundColor: 'transparent',
+                    title: 'New Chat',
+                    headerShown: true,
+                    header: () => <ChatHeader />,
+                    drawerIcon: ({ focused, size, color }) => (
+                      <Ionicons
+                        name="add"
+                        size={size}
+                      />
+                    ),
+                  }} />
+                <Drawer.Screen
+                  name="setting"
+                  options={{
+                    drawerLabelStyle: {
+                      color: "current"
                     },
-                    headerShown: false,
-                  }}
-                  drawerContent={(props) => <DrawerContent {...props} />}
-                >
-                  <Drawer.Screen
-                    name="index"
-                    options={{
-                      drawerLabelStyle: {
-                        color: "current"
-                      },
-                      title: 'New Chat',
-                      headerShown: true,
-                      header: () => <ChatHeader />,
-                      drawerIcon: ({ focused, size, color }) => (
-                        <Ionicons
-                          name="add"
-                          size={size}
-                        />
-                      ),
-                    }} />
-                  <Drawer.Screen
-                    name="setting"
-                    options={{
-                      drawerLabelStyle: {
-                        color: "current"
-                      },
-                      title: 'Setting',
-                      drawerIcon: ({ focused, size, color }) => (
-                        <Ionicons
-                          name="settings-outline"
-                          size={size}
-                        />
-                      )
-                    }} />
-                </Drawer>
-              </PortalProvider>
-            </OllamaProvider>
+                    title: 'Setting',
+                    drawerIcon: ({ focused, size, color }) => (
+                      <Ionicons
+                        name="settings-outline"
+                        size={size}
+                      />
+                    )
+                  }} />
+              </Drawer>
+            </PaperTheme>
           </GestureHandlerRootView>
         </ActionSheetProvider>
-      </PaperProvider>
+      </OllamaProvider>
     </SafeAreaProvider>
   );
 }

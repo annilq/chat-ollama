@@ -3,8 +3,8 @@ import { router } from 'expo-router';
 import * as React from 'react';
 import { StyleProp, View, Text } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
-import { useAppTheme } from '../_layout';
 import Divider from '@/components/Divider';
+import { useAppTheme } from '@/components/PaperTheme';
 
 const listItemStyle: StyleProp<any> = { paddingHorizontal: 6, borderRadius: 6, overflow: "hidden" }
 

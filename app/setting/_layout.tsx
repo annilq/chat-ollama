@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { MenuIcon } from '@/components/MenuIcon';
-import { useAppTheme } from '../_layout';
+import { useAppTheme } from '@/components/PaperTheme';
 
 export default function SettingLayout() {
   const {

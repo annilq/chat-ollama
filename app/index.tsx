@@ -1,5 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet'
-import { Chat, MessageType } from '@flyerhq/react-native-chat-ui'
+import { Chat, MessageType, defaultTheme } from '@flyerhq/react-native-chat-ui'
 import { PreviewData } from '@flyerhq/react-native-link-preview'
 import React, { useState } from 'react'
 import DocumentPicker from 'react-native-document-picker'
@@ -10,8 +10,11 @@ import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 import data from '../message.json'
+import { useSnackBarStore } from '@/store/useSnackbar'
 
 const App = () => {
+  const snackState = useSnackBarStore()
+
   const { showActionSheetWithOptions } = useActionSheet()
   const [messages, setMessages] = useState<MessageType.Any[]>(data)
   const user = { id: '06c33e8b-e835-4736-80f4-63f44b66666c' }
@@ -117,6 +120,7 @@ const App = () => {
       type: 'text',
     }
     addMessage(textMessage)
+    snackState.setSnack({ visible: true, message: message.text })
   }
 
   return (
@@ -127,6 +131,14 @@ const App = () => {
       onPreviewDataFetched={handlePreviewDataFetched}
       onSendPress={handleSendPress}
       user={user}
+      theme={{
+        ...defaultTheme,
+        colors: {
+          ...defaultTheme.colors,
+          inputText: "#000",
+          inputBackground: "#efefef"
+        }
+      }}
     />
   )
 }

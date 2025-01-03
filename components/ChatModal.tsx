@@ -40,7 +40,7 @@ export const ChatModal = () => {
 	return (
 		<>
 			<Button mode={"text"} onPress={handleMenuPress} icon="chevron-down"	>
-				{selectedModel ? <Text>{getModelName(selectedModel)}</Text> : <Text>select Model</Text>}
+				{selectedModel ? <Text>{getModelName(selectedModel)}</Text> : <Text>Select Model</Text>}
 			</Button>
 			<Portal>
 				<BottomSheet
