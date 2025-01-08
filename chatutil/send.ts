@@ -1,7 +1,7 @@
 import { Alert } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { generateChatCompletionStream, MessageRole } from './ollamaClient';
+import { ollama, MessageRole } from './OllamaApi';
 import { Message } from 'ollama';
 // import { User, Assistant, Message, MessageRole } from './types'; 
 
@@ -120,13 +120,14 @@ const send = async (
   const newId = uuidv4();
 
   try {
-    const response = await generateChatCompletionStream({
+    const response = await ollama.chat({
       model,
       messages: history,
-      keepAlive: 300
+      keep_alive: 300
     });
 
     let text = "";
+    
     response.on('data', (chunk) => {
       text += chunk.content;
       if (onStream) onStream(text, false);
@@ -160,7 +161,7 @@ function jsonDecode(data: string): any {
 async function getTitleAi(history: any[]): Promise<string> {
   try {
     // Mocking the API call using axios (Replace with your actual endpoint and payload)
-    const generated = await generateChatCompletionStream({
+    const generated = await chat({
       messages: [
         {
           role: 'system',

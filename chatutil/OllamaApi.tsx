@@ -31,7 +31,7 @@ class OllamaAPI {
         throw new Error(errorData?.error || `HTTP error! status: ${response.status}`);
       }
 
-      return response;
+      return response.json() ;
     } catch (error) {
       console.error(`Error in Ollama API call to ${endpoint}:`, error);
       throw error;
@@ -62,16 +62,15 @@ class OllamaAPI {
    * List all available models
    */
   async list(): Promise<ListResponse> {
-    const response = await this.fetchWithError('/api/tags', {
+    return this.fetchWithError('/api/tags', {
       method: 'GET',
     });
-    return response.json();
   }
 
   /**
    * Pull a model from the Ollama library
    */
-  async pull(request: PullRequest): Promise<Response> {
+  async pull(request: PullRequest): Promise<ModelResponse> {
     return this.fetchWithError('/api/pull', {
       method: 'POST',
       body: JSON.stringify(request),
@@ -82,18 +81,17 @@ class OllamaAPI {
    * Get information about a specific model
    */
   async modelInfo(modelName: string): Promise<ModelResponse> {
-    const response = await this.fetchWithError('/api/show', {
+    return this.fetchWithError('/api/show', {
       method: 'POST',
       body: JSON.stringify({ name: modelName }),
     });
-    return response.json();
   }
 
   /**
    * Delete a model
    */
-  async deleteModel(modelName: string): Promise<void> {
-    await this.fetchWithError('/api/delete', {
+  async deleteModel(modelName: string): Promise<any> {
+    return this.fetchWithError('/api/delete', {
       method: 'DELETE',
       body: JSON.stringify({ name: modelName }),
     });
@@ -102,8 +100,8 @@ class OllamaAPI {
   /**
    * Copy a model
    */
-  async copyModel(source: string, destination: string): Promise<void> {
-    await this.fetchWithError('/api/copy', {
+  async copyModel(source: string, destination: string): Promise<any> {
+    return this.fetchWithError('/api/copy', {
       method: 'POST',
       body: JSON.stringify({ source, destination }),
     });
@@ -112,8 +110,8 @@ class OllamaAPI {
   /**
    * Create a model from a Modelfile
    */
-  async createModel(modelName: string, modelfile: string): Promise<void> {
-    await this.fetchWithError('/api/create', {
+  async createModel(modelName: string, modelfile: string): Promise<any> {
+    return this.fetchWithError('/api/create', {
       method: 'POST',
       body: JSON.stringify({ name: modelName, modelfile }),
     });
