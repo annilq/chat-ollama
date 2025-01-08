@@ -68,89 +68,39 @@ const useChatStore = create<ChatState>()(persist((set, get) => ({
 
     set({ messages: updatedMessages });
 
-    let streamResponse = '';
-
     try {
-      // const aborter = new AbortController();
-
+      
       const response = await useOllamaStore.getState().ollama.chat({
         model: useOllamaStore.getState().selectedModel!,
         stream: true,
         messages: updatedMessages,
-        // signal: aborter.signal
+        onData: (data) => {
+
+          // try {
+
+          //   set((state) => {
+          //     const currentMessages = [...state.messages];
+          //     const lastMessage = currentMessages[currentMessages.length - 1];
+
+          //     if (lastMessage && lastMessage.role === 'assistant') {
+          //       lastMessage.content = streamResponse;
+          //     } else {
+          //       currentMessages.push({ role: 'assistant', content: content.toString() });
+          //     }
+
+          //     return { messages: currentMessages };
+          //   });
+
+          // } catch (error) {
+          //   set({ error: 'Error parsing response' });
+          // }
+
+        },
+        onDataEnd: () => {
+
+        }
       },
       );
-      const content: string[] = []
-      // for await (const part of response) {
-      //   content.push(part.message.content)
-      // }
-
-      // for await (const chunk of response.body) {
-      //   if (signal.aborted) break; // just break out of loop
-      //   // Do something with the chunk
-      // }
-
-
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('Failed to get response reader');
-
-      const decoder = new TextDecoder();
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.trim() === '') continue;
-
-          try {
-            const parsedChunk = JSON.parse(line);
-            streamResponse += parsedChunk.response;
-
-            set((state) => {
-              const currentMessages = [...state.messages];
-              const lastMessage = currentMessages[currentMessages.length - 1];
-
-              if (lastMessage && lastMessage.role === 'assistant') {
-                lastMessage.content = streamResponse;
-              } else {
-                currentMessages.push({ role: 'assistant', content: streamResponse });
-              }
-
-              return { messages: currentMessages };
-            });
-
-            if (parsedChunk.done) {
-              const finalMessages = [...updatedMessages, { role: 'assistant', content: streamResponse }];
-              set({ messages: finalMessages });
-              get().saveMessages(finalMessages);
-              break;
-            }
-          } catch (error) {
-            set({ error: 'Error parsing response' });
-          }
-        }
-      }
-      try {
-
-        set((state) => {
-          const currentMessages = [...state.messages];
-          const lastMessage = currentMessages[currentMessages.length - 1];
-
-          if (lastMessage && lastMessage.role === 'assistant') {
-            lastMessage.content = streamResponse;
-          } else {
-            currentMessages.push({ role: 'assistant', content: content.toString() });
-          }
-
-          return { messages: currentMessages };
-        });
-
-      } catch (error) {
-        set({ error: 'Error parsing response' });
-      }
 
     } catch (error) {
       set({ error: 'Error generating response' });

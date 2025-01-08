@@ -9,6 +9,11 @@ export enum MessageRole {
   ASSISTANT = 'assistant'
 }
 
+export interface ChatStreamRequest extends ChatRequest {
+  onData?: (data: ChatResponse) => void
+  onDataEnd?: () => void
+}
+
 class OllamaAPI {
   private baseURL: string;
 
@@ -31,7 +36,7 @@ class OllamaAPI {
         throw new Error(errorData?.error || `HTTP error! status: ${response.status}`);
       }
 
-      return response.json() ;
+      return response;
     } catch (error) {
       console.error(`Error in Ollama API call to ${endpoint}:`, error);
       throw error;
@@ -41,11 +46,30 @@ class OllamaAPI {
   /**
    * Chat with a model using message history
    */
-  async chat(request: ChatRequest): Promise<ChatResponse> {
-    return this.fetchWithError('/api/chat', {
+  async chat(request: ChatStreamRequest): Promise<ChatResponse | void> {
+    const response = await this.fetchWithError('/api/chat', {
       method: 'POST',
       body: JSON.stringify(request),
     });
+    if (request.stream) {
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('Failed to get response reader');
+
+      const decoder = new TextDecoder();
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          request.onDataEnd?.()
+          break
+        };
+        request.onData?.(value)
+        // const chunk = decoder.decode(value);
+        // const lines = chunk.split('\n');
+      }
+    } else {
+      return response.json()
+    }
+    return response
   }
 
   /**
@@ -62,9 +86,10 @@ class OllamaAPI {
    * List all available models
    */
   async list(): Promise<ListResponse> {
-    return this.fetchWithError('/api/tags', {
+    const response = await this.fetchWithError('/api/tags', {
       method: 'GET',
     });
+    return response.json();
   }
 
   /**
@@ -81,17 +106,18 @@ class OllamaAPI {
    * Get information about a specific model
    */
   async modelInfo(modelName: string): Promise<ModelResponse> {
-    return this.fetchWithError('/api/show', {
+    const response = await this.fetchWithError('/api/show', {
       method: 'POST',
       body: JSON.stringify({ name: modelName }),
     });
+    return response.json();
   }
 
   /**
    * Delete a model
    */
-  async deleteModel(modelName: string): Promise<any> {
-    return this.fetchWithError('/api/delete', {
+  async deleteModel(modelName: string): Promise<void> {
+    await this.fetchWithError('/api/delete', {
       method: 'DELETE',
       body: JSON.stringify({ name: modelName }),
     });
@@ -100,8 +126,8 @@ class OllamaAPI {
   /**
    * Copy a model
    */
-  async copyModel(source: string, destination: string): Promise<any> {
-    return this.fetchWithError('/api/copy', {
+  async copyModel(source: string, destination: string): Promise<void> {
+    await this.fetchWithError('/api/copy', {
       method: 'POST',
       body: JSON.stringify({ source, destination }),
     });
@@ -110,8 +136,8 @@ class OllamaAPI {
   /**
    * Create a model from a Modelfile
    */
-  async createModel(modelName: string, modelfile: string): Promise<any> {
-    return this.fetchWithError('/api/create', {
+  async createModel(modelName: string, modelfile: string): Promise<void> {
+    await this.fetchWithError('/api/create', {
       method: 'POST',
       body: JSON.stringify({ name: modelName, modelfile }),
     });
