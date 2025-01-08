@@ -51,25 +51,28 @@ class OllamaAPI {
       method: 'POST',
       body: JSON.stringify(request),
     });
-    if (request.stream) {
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error('Failed to get response reader');
+    // if (request.stream) {
+    //   const reader = response.body?.getReader();
+    //   if (!reader) throw new Error('Failed to get response reader');
 
-      const decoder = new TextDecoder();
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          request.onDataEnd?.()
-          break
-        };
-        request.onData?.(value)
-        // const chunk = decoder.decode(value);
-        // const lines = chunk.split('\n');
-      }
-    } else {
-      return response.json()
-    }
-    return response
+    //   const decoder = new TextDecoder();
+    //   console.log(decoder);
+
+    //   while (true) {
+    //     const { value, done } = await reader.read();
+    //     console.log(value, done);
+
+    //     if (done) {
+    //       request.onDataEnd?.()
+    //       break
+    //     };
+    //     // const chunk = decoder.decode(value);
+    //     // const lines = chunk.split('\n');
+    //     request.onData?.(value)
+    //   }
+    // } 
+    return response.json()
+
   }
 
   /**

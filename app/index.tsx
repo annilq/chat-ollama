@@ -9,20 +9,17 @@ import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-import data from '../message.json'
 import { useSnackBarStore } from '@/store/useSnackbar'
 import { useOllamaStore } from '@/store/useOllamaStore'
+import { useChatStore } from '@/store/useChats'
 
 const App = () => {
   const snackState = useSnackBarStore()
-
+  const { checkService, initialize } = useOllamaStore()
+  const { sendMessage, messages } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
-  const [messages, setMessages] = useState<MessageType.Any[]>(data)
   const user = { id: '06c33e8b-e835-4736-80f4-63f44b66666c' }
 
-  const addMessage = (message: MessageType.Any) => {
-    setMessages([message, ...messages])
-  }
 
   const handleAttachmentPress = () => {
     showActionSheetWithOptions(
@@ -58,7 +55,7 @@ const App = () => {
         type: 'file',
         uri: response.uri,
       }
-      addMessage(fileMessage)
+      sendMessage(fileMessage)
     } catch { }
   }
 
@@ -86,7 +83,7 @@ const App = () => {
         uri: response.uri,
         width: response.width,
       }
-      addMessage(imageMessage)
+      sendMessage(imageMessage)
     }
   }
 
@@ -105,7 +102,7 @@ const App = () => {
     message: MessageType.Text
     previewData: PreviewData
   }) => {
-    setMessages(
+    sendMessage(
       messages.map<MessageType.Any>((m) =>
         m.id === message.id ? { ...m, previewData } : m
       )
@@ -120,22 +117,23 @@ const App = () => {
       text: message.text,
       type: 'text',
     }
-    addMessage(textMessage)
-    snackState.setSnack({ visible: true, message: message.text })
+
+    sendMessage(textMessage)
+    // snackState.setSnack({ visible: true, message: message.text })
   }
 
   useEffect(() => {
     const host = 'http://localhost:11434'; // You can make this configurable
-    useOllamaStore.getState().initialize(host);
+    initialize(host);
 
     // Set up health check interval
     const interval = setInterval(() => {
-      useOllamaStore.getState().checkService();
+      checkService();
     }, 10000); // Check every 10 seconds
-    
+
     return () => clearInterval(interval);
   }, []);
-  
+
   return (
     <Chat
       messages={messages}
