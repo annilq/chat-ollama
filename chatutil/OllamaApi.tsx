@@ -9,10 +9,6 @@ export enum MessageRole {
   ASSISTANT = 'assistant'
 }
 
-export interface ChatStreamRequest extends ChatRequest {
-  onData?: (data: ChatResponse) => void
-  onDataEnd?: () => void
-}
 
 class OllamaAPI {
   private baseURL: string;
@@ -46,31 +42,11 @@ class OllamaAPI {
   /**
    * Chat with a model using message history
    */
-  async chat(request: ChatStreamRequest): Promise<ChatResponse | void> {
+  async chat(request: ChatRequest): Promise<ChatResponse | void> {
     const response = await this.fetchWithError('/api/chat', {
       method: 'POST',
       body: JSON.stringify(request),
     });
-    // if (request.stream) {
-    //   const reader = response.body?.getReader();
-    //   if (!reader) throw new Error('Failed to get response reader');
-
-    //   const decoder = new TextDecoder();
-    //   console.log(decoder);
-
-    //   while (true) {
-    //     const { value, done } = await reader.read();
-    //     console.log(value, done);
-
-    //     if (done) {
-    //       request.onDataEnd?.()
-    //       break
-    //     };
-    //     // const chunk = decoder.decode(value);
-    //     // const lines = chunk.split('\n');
-    //     request.onData?.(value)
-    //   }
-    // } 
     return response.json()
 
   }

@@ -14,10 +14,11 @@ export const ChatModal = () => {
 
 	const handleMenuPress = useCallback(() => {
 		refreshModels()
+
 		if (models.length > 0) {
 			bottomSheetRef.current?.expand();
 		}
-	}, []);
+	}, [models]);
 
 	const renderBackdrop = useCallback(
 		(props: any) => (

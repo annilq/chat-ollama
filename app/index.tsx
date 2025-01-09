@@ -1,7 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import { Chat, MessageType, defaultTheme } from '@flyerhq/react-native-chat-ui'
 import { PreviewData } from '@flyerhq/react-native-link-preview'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useId, useState } from 'react'
 import DocumentPicker from 'react-native-document-picker'
 import FileViewer from 'react-native-file-viewer'
 import * as ImagePicker from 'expo-image-picker';
@@ -11,14 +11,45 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { useSnackBarStore } from '@/store/useSnackbar'
 import { useOllamaStore } from '@/store/useOllamaStore'
-import { useChatStore } from '@/store/useChats'
+import { CommonMessage, useChatStore } from '@/store/useChats'
+import { ActivityIndicator, View, Text } from 'react-native'
+import { IconButton } from 'react-native-paper'
+
+const renderBubble = ({
+  child,
+  message,
+  nextMessageInGroup,
+}: {
+  child: ReactNode
+  message: Partial<CommonMessage>
+  nextMessageInGroup: boolean
+}) => {
+  return (
+    <View
+      style={{
+        display: "flex",
+        gap: 4,
+        flexDirection: "row",
+        backgroundColor: defaultTheme.colors.inputBackground,
+        borderRadius: 20,
+        paddingInline: 20,
+        paddingBlock: 10,
+        borderWidth: 1,
+        overflow: 'hidden',
+      }}
+    >
+      {message.type === "text" ? <Text style={{ color: "#fff" }}>{message.text}</Text> : child}
+      {message.loading ? <ActivityIndicator animating={true} /> : false}
+    </View>
+  )
+}
 
 const App = () => {
   const snackState = useSnackBarStore()
   const { checkService, initialize } = useOllamaStore()
-  const { sendMessage, messages } = useChatStore()
+  const { sendMessage, messages, isSending } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
-  const user = { id: '06c33e8b-e835-4736-80f4-63f44b66666c' }
+  const user = { id: useId() }
 
 
   const handleAttachmentPress = () => {
@@ -141,13 +172,18 @@ const App = () => {
       onMessagePress={handleMessagePress}
       onPreviewDataFetched={handlePreviewDataFetched}
       onSendPress={handleSendPress}
+      renderBubble={renderBubble}
       user={user}
       theme={{
         ...defaultTheme,
         colors: {
           ...defaultTheme.colors,
+          primary: "#fff",
           inputText: "#000",
           inputBackground: "#efefef"
+        },
+        icons: {
+          sendButtonIcon: () => !isSending ? <IconButton icon={"send-outline"} /> : <IconButton icon={"pause-circle"} />
         }
       }}
     />

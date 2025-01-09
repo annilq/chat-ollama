@@ -13,7 +13,7 @@ import { useSnackBarStore } from "./useSnackbar";
 const STORAGE_KEY = '@ollama_chat_history';
 
 // common Message for Both chat UI and ollama
-type CommonMessage = MessageType.Any & { role: MessageRole }
+export type CommonMessage = MessageType.Any & { role: MessageRole, loading?: boolean }
 
 export interface Chat {
   messages: CommonMessage[];
@@ -67,6 +67,45 @@ const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] =
   })
 }
 
+export const getChatMessageFromOllamaResponse = (ollamaResponse: ChatResponse): CommonMessage => {
+  return {
+    id: uuidv4(),
+    text: ollamaResponse.message.content,
+    createdAt: ollamaResponse.created_at.valueOf(),
+    author: {
+      id: MessageRole.ASSISTANT,
+    },
+    type: 'text',
+    role: MessageRole.ASSISTANT
+  };
+};
+
+export const getAssistantMessage = (text: string): CommonMessage => {
+  return {
+    id: uuidv4(),
+    text,
+    createdAt: Date.now(),
+    author: {
+      id: MessageRole.ASSISTANT,
+    },
+    type: 'text',
+    role: MessageRole.ASSISTANT
+  };
+};
+
+export const getSystemMessage = (text: string): CommonMessage => {
+  return {
+    id: uuidv4(),
+    text,
+    createdAt: Date.now(),
+    author: {
+      id: MessageRole.SYSTEM,
+    },
+    type: 'text',
+    role: MessageRole.SYSTEM
+  };
+};
+
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: [],
   messages: [],
@@ -109,42 +148,26 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
       return
     }
-    // set({ isSending: true });
     const currentMessages = get().messages;
 
-    const updatedMessages = [{ type: "text", text: "", id: uuidv4(), role: MessageRole.ASSISTANT }, { ...message, role: MessageRole.USER }, ...currentMessages];
+    const updatedMessages = [{ ...message, loading: true, role: MessageRole.USER }, ...currentMessages];
 
-    // set({ messages: updatedMessages });
+    set({ messages: updatedMessages, isSending: true });
 
     try {
       const messages = getOllamaMessageFromChatMessage(updatedMessages);
 
       const response = await useOllamaStore.getState().ollama.chat({
         model,
-        // stream: false,
+        stream: false,
         messages,
-        onData: (data: ChatResponse) => {
-          console.log("onData", data.message.content);
-
-          // try {
-
-          //   set((state) => {
-          //     const currentMessages = [...state.messages];
-          //     const lastMessage = currentMessages[0];
-          //     lastMessage.text = data.message?.content;
-          //     return { messages: [lastMessage, ...currentMessages] };
-          //   });
-
-          // } catch (error) {
-          //   set({ error: 'Error parsing response' });
-          // }
-
-        },
-        onDataEnd: () => {
-
-        }
       });
 
+      if (response?.done) {
+        const [lastmessage, ...currentMessages] = get().messages;
+        const ollamaMessage = getChatMessageFromOllamaResponse(response)
+        set({ messages: [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages], isSending: true });
+      }
     } catch (error) {
       set({ error: 'Error generating response' });
     } finally {
