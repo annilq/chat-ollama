@@ -9,11 +9,14 @@ const getModelName = (name: string) => name?.split(":")[0]
 
 export const ChatModal = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const { models, selectedModel, setSelectedModel } = useOllamaStore()
+	const { models, selectedModel, setSelectedModel, refreshModels } = useOllamaStore()
 	const snapPoints = useMemo(() => ['25%'], []);
 
 	const handleMenuPress = useCallback(() => {
-		bottomSheetRef.current?.expand();
+		refreshModels()
+		if (models.length > 0) {
+			bottomSheetRef.current?.expand();
+		}
 	}, []);
 
 	const renderBackdrop = useCallback(

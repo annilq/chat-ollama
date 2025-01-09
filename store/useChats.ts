@@ -1,14 +1,14 @@
 // import { ollama } from "@/chatutil/OllamaApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Message } from "ollama";
+import { ChatResponse, Message } from "ollama";
 import { create } from "zustand";
 import { useOllamaStore } from './useOllamaStore';
 import { createJSONStorage, persist } from "zustand/middleware";
 import { MessageType } from "@flyerhq/react-native-chat-ui";
 import { v4 as uuidv4 } from 'uuid';
 
-import data from '../message.json'
 import { MessageRole } from "@/chatutil/OllamaApi";
+import { useSnackBarStore } from "./useSnackbar";
 
 const STORAGE_KEY = '@ollama_chat_history';
 
@@ -102,65 +102,48 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   sendMessage: async (message: MessageType.Any) => {
     const model = useOllamaStore.getState().selectedModel!
+    if (!model) {
+      useSnackBarStore.getState().setSnack({
+        visible: true,
+        message: "please pick a model to chat"
+      });
+      return
+    }
     // set({ isSending: true });
     const currentMessages = get().messages;
 
-    const updatedMessages = [{ ...message, role: MessageRole.USER }, ...currentMessages];
+    const updatedMessages = [{ type: "text", text: "", id: uuidv4(), role: MessageRole.ASSISTANT }, { ...message, role: MessageRole.USER }, ...currentMessages];
 
-    set({ messages: updatedMessages });
+    // set({ messages: updatedMessages });
 
     try {
       const messages = getOllamaMessageFromChatMessage(updatedMessages);
 
       const response = await useOllamaStore.getState().ollama.chat({
         model,
-        stream: false,
+        // stream: false,
         messages,
-        // onData: (data) => {
-        //   console.log(data);
+        onData: (data: ChatResponse) => {
+          console.log("onData", data.message.content);
 
-        //   try {
+          // try {
 
-        //     set((state) => {
-        //       const currentMessages = [...state.messages];
-        //       const lastMessage = currentMessages[currentMessages.length - 1];
+          //   set((state) => {
+          //     const currentMessages = [...state.messages];
+          //     const lastMessage = currentMessages[0];
+          //     lastMessage.text = data.message?.content;
+          //     return { messages: [lastMessage, ...currentMessages] };
+          //   });
 
-        //       if (lastMessage && lastMessage.role === 'assistant') {
-        //         lastMessage.content = streamResponse;
-        //       } else {
-        //         currentMessages.push({ role: 'assistant', content: content.toString() });
-        //       }
+          // } catch (error) {
+          //   set({ error: 'Error parsing response' });
+          // }
 
-        //       return { messages: currentMessages };
-        //     });
+        },
+        onDataEnd: () => {
 
-        //   } catch (error) {
-        //     set({ error: 'Error parsing response' });
-        //   }
-
-        // },
-        // onDataEnd: () => {
-
-        // }
-      });
-      console.log(response);
-      if (response?.done) {
-        const { message } = response
-        const assistantMessage: CommonMessage = {
-          text: message.content,
-          role: MessageRole.ASSISTANT,
-          createdAt: new Date(response.created_at).getMilliseconds(),
-          type: "text",
-          id: uuidv4(),
-          author: {
-            id: model
-          }
         }
-        const currentMessages = get().messages;
-        const updatedMessages = [assistantMessage, ...currentMessages];
-
-        set({ messages: updatedMessages });
-      }
+      });
 
     } catch (error) {
       set({ error: 'Error generating response' });
