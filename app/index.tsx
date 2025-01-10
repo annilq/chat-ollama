@@ -173,6 +173,7 @@ const App = () => {
       onPreviewDataFetched={handlePreviewDataFetched}
       onSendPress={handleSendPress}
       renderBubble={renderBubble}
+      sendButtonVisibilityMode="always"
       user={user}
       theme={{
         ...defaultTheme,
