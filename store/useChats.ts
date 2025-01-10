@@ -20,6 +20,7 @@ export interface Chat {
   model: string;
   id: string;
   title: string;
+  createdAt: Date
 }
 
 export interface ChatState {
