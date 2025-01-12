@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import OllamaAPI from '../chatutil/OllamaApi';
+import OllamaAPI from '@/util/ollama_api';
 import { useSnackBarStore } from './useSnackbar';
 import { ModelResponse } from "ollama";
 

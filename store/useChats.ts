@@ -1,16 +1,18 @@
-// import { ollama } from "@/chatutil/OllamaApi";
+// import { ollama } from "@/util/OllamaApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ChatResponse, Message } from "ollama";
 import { create } from "zustand";
+import { v4 as uuidv4 } from 'uuid';
+
 import { useOllamaStore } from './useOllamaStore';
 import { createJSONStorage, persist } from "zustand/middleware";
 import { MessageType } from "@flyerhq/react-native-chat-ui";
-import { v4 as uuidv4 } from 'uuid';
 
-import { MessageRole } from "@/chatutil/OllamaApi";
+import { MessageRole } from "@/util/ollama_api";
 import { useSnackBarStore } from "./useSnackbar";
+import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitleAi } from "@/util/util";
+import { useConfigStore } from "./useConfig";
 
-const STORAGE_KEY = '@ollama_chat_history';
+const CHAT_STORAGE_KEY = '@ollama_chat_history';
 
 // common Message for Both chat UI and ollama
 export type CommonMessage = MessageType.Any & { role: MessageRole, loading?: boolean }
@@ -25,116 +27,58 @@ export interface Chat {
 
 export interface ChatState {
   chats: Chat[];
-  messages: CommonMessage[];
+  chat?: Chat;
+  useSystem?: Boolean;
   isSending: boolean;
   error: string | null;
   initializeChats: () => Promise<void>;
-  getMessages: (chatId?: string) => Promise<void>;
-  saveMessages: (messages: CommonMessage[]) => Promise<void>;
+  getChat: (chatId?: string) => Promise<void>;
+  saveChat: () => Promise<void>;
   sendMessage: (message: MessageType.Any) => void;
   clearError: () => void;
 }
 
-const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] => {
-
-  return messages.map(message => {
-    const { role = MessageRole.ASSISTANT, type = "text" } = message
-    switch (type) {
-      case "text":
-        return ({
-          role: role,
-          content: message.text!
-        })
-
-      case "image":
-      case "file":
-        return ({
-          role: role,
-          content: "",
-          images: [message.uri]
-        })
-      case "unsupported":
-        return ({
-          role: role,
-          content: ""
-        })
-
-      case "custom":
-        return ({
-          role: role,
-          content: ""
-        })
-    }
-  })
-}
-
-export const getChatMessageFromOllamaResponse = (ollamaResponse: ChatResponse): CommonMessage => {
-  return {
-    id: uuidv4(),
-    text: ollamaResponse.message.content,
-    createdAt: ollamaResponse.created_at.valueOf(),
-    author: {
-      id: MessageRole.ASSISTANT,
-    },
-    type: 'text',
-    role: MessageRole.ASSISTANT
-  };
-};
-
-export const getAssistantMessage = (text: string): CommonMessage => {
-  return {
-    id: uuidv4(),
-    text,
-    createdAt: Date.now(),
-    author: {
-      id: MessageRole.ASSISTANT,
-    },
-    type: 'text',
-    role: MessageRole.ASSISTANT
-  };
-};
-
-export const getSystemMessage = (text: string): CommonMessage => {
-  return {
-    id: uuidv4(),
-    text,
-    createdAt: Date.now(),
-    author: {
-      id: MessageRole.SYSTEM,
-    },
-    type: 'text',
-    role: MessageRole.SYSTEM
-  };
-};
-
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: [],
+  useSystem: false,
+  chat: undefined,
   messages: [],
   isSending: false,
   error: null,
 
   initializeChats: async () => {
-    try {
-      const history = await AsyncStorage.getItem(STORAGE_KEY);
-      if (history) {
-        set({ messages: JSON.parse(history) as CommonMessage[] });
-      }
-    } catch (error) {
-      set({ error: 'Error loading chat history' });
+    const history = await AsyncStorage.getItem(CHAT_STORAGE_KEY);
+    if (history) {
+      set({ chats: JSON.parse(history) as Chat[] });
     }
   },
 
-  getMessages: async (chatId?: string) => {
+  getChat: async (chatId?: string) => {
     try {
-      const messages = await AsyncStorage.getItem(STORAGE_KEY) as unknown as CommonMessage[];
-      set({ messages });
+      const chats = get().chats
+      const chat = chats.find(chat => chat.id === chatId)
+      console.log(chat);
+
+      if (chat) {
+        set({ chat: { ...chat, messages: chat.messages.filter(message => message.role != MessageRole.SYSTEM) || [] } });
+      }
     } catch (error) {
-      set({ messages: [] });
     }
   },
-  saveMessages: async (messages: CommonMessage[]) => {
+
+  saveChat: async () => {
+    const { chat, chats } = get()!
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      const index = chats.findIndex(item => item.id === chat?.id)
+      if (index > -1) {
+        chats.splice(index, 1, chat!);
+      } else {
+        chats.push(chat!)
+      }
+      console.log(chats);
+
+      await AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
+      set({ chats })
     } catch (error) {
       set({ error: 'Error saving chat history' });
     }
@@ -149,11 +93,22 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
       return
     }
-    const currentMessages = get().messages;
+    if (!get().chat) {
+      set({
+        chat: {
+          messages: get().useSystem ? [{ role: MessageRole.SYSTEM, text: "", id: uuidv4(), type: "text", author: { id: MessageRole.SYSTEM } }] : [],
+          title: "",
+          model,
+          createdAt: new Date,
+          id: uuidv4()
+        }
+      })
+    }
+    const currentMessages = get().chat!.messages;
 
     const updatedMessages = [{ ...message, loading: true, role: MessageRole.USER }, ...currentMessages];
 
-    set({ messages: updatedMessages, isSending: true });
+    set({ chat: { ...get().chat!, messages: updatedMessages }, isSending: true });
 
     try {
       const messages = getOllamaMessageFromChatMessage(updatedMessages);
@@ -165,9 +120,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
       if (response?.done) {
-        const [lastmessage, ...currentMessages] = get().messages;
-        const ollamaMessage = getChatMessageFromOllamaResponse(response)
-        set({ messages: [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages], isSending: true });
+        const [lastmessage, ...currentMessages] = get().chat?.messages!;
+        const ollamaMessage = getAssistantMessageFromOllama(response)
+        const updatedMessages = [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages]
+        set({ chat: { ...get().chat!, messages: updatedMessages } });
+        
+        const config = useConfigStore.getState().config
+
+        if (config.generateTitles) {
+          const title = await getTitleAi(updatedMessages)
+          set({ chat: { ...get().chat!, title } });
+        }
+        get().saveChat()
       }
     } catch (error) {
       set({ error: 'Error generating response' });

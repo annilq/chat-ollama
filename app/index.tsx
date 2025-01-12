@@ -47,11 +47,11 @@ const renderBubble = ({
 const App = () => {
   const snackState = useSnackBarStore()
   const { checkService, initialize } = useOllamaStore()
-  const { sendMessage, messages, isSending } = useChatStore()
+  const { sendMessage, chat, isSending } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
   const user = { id: useId() }
 
-
+  const messages = chat?.messages || []
   const handleAttachmentPress = () => {
     showActionSheetWithOptions(
       {

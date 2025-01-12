@@ -5,4 +5,4 @@
 
 
 ### tips
-Ollama's API doesn't actually support Server-Sent Events (SSE) natively. Instead, it uses a line-delimited JSON streaming format,but the React Native’s fetch API struggles with handling stream responses so far , so I can only display the feedback when the response completed.
+Ollama's API doesn't actually support Server-Sent Events (SSE) natively.Instead, it uses a line-delimited JSON streaming format, So I can't use ```react-native-sse``` to get stream Data ,and the React Native’s fetch API struggles with handling stream responses so far , so I can only display the feedback when the response completed.

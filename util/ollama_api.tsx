@@ -48,7 +48,6 @@ class OllamaAPI {
       body: JSON.stringify(request),
     });
     return response.json()
-
   }
 
   /**

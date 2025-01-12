@@ -1,9 +1,10 @@
-import { Alert } from 'react-native';
-import { v4 as uuidv4 } from 'uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ollama, MessageRole } from './OllamaApi';
-import { Message } from 'ollama';
-// import { User, Assistant, Message, MessageRole } from './types'; 
+import { v4 as uuidv4 } from 'uuid';
+
+import { MessageRole } from './ollama_api';
+import { ChatResponse, Message } from 'ollama';
+import { Chat, CommonMessage } from '@/store/useChats';
+import { useOllamaStore } from '@/store/useOllamaStore';
 
 let images: string[] = [];
 
@@ -57,111 +58,33 @@ const getBase64FromUri = async (uri: string): Promise<string> => {
 };
 
 const getHistoryString = async (uuid: string): Promise<any[]> => {
-  const chats = await AsyncStorage.getItem("chats") ?? [];
-  let messages = [];
+  const chatstr = await AsyncStorage.getItem("chats");
+  const chats: Chat[] = chatstr ? JSON.parse(chatstr) : [];
+  let messages: CommonMessage[] = [];
 
   chats.forEach((chat) => {
-    if (chat.uuid === uuid) {
+    if (chat.id === uuid) {
       messages = chat.messages;
     }
   });
 
-  if (messages[0]?.role === 'system') {
-    messages.shift(); // 删除 system 消息
+  if (messages[0]?.role === MessageRole.SYSTEM) {
+    messages.shift(); // delete system message
   }
-
-  messages.forEach((message) => {
-    if (message.type === 'image') {
-      message.content = `<${message.role} inserted an image>`;
-    }
-  });
 
   return messages;
 };
 
 
-const send = async (
-  value: string,
-  context: any,
-  setState: any,
-  onStream?: (currentText: string, done: boolean) => void,
-  addToSystem?: string
-): Promise<string> => {
-  setState({ sendable: false });
-
-  const host = await AsyncStorage.getItem("host");
-  if (!host) {
-    Alert.alert("Error", "No host selected.");
-    if (onStream) onStream("", true);
-    return "";
-  }
-
-  const chatAllowed = await AsyncStorage.getItem("chatAllowed") ?? true;
-  const model = await AsyncStorage.getItem("model");
-  if (!chatAllowed || !model) {
-    Alert.alert("Error", model ? "Model not selected." : "Chat not allowed.");
-    if (onStream) onStream("", true);
-    return "";
-  }
-
-  const chatUuid = await AsyncStorage.getItem("chatUuid") ?? uuidv4();
-  if (!chatUuid) {
-    await AsyncStorage.setItem("chatUuid", chatUuid);
-  }
-
-  const history = await getHistory(addToSystem);
-
-  history.push({
-    role: MessageRole.USER,
-    content: value.trim(),
-    images: images.length > 0 ? images : undefined
-  });
-
-  const newId = uuidv4();
-
-  try {
-    const response = await ollama.chat({
-      model,
-      messages: history,
-      keep_alive: 300
-    });
-
-    let text = "";
-    
-    response.on('data', (chunk) => {
-      text += chunk.content;
-      if (onStream) onStream(text, false);
-    });
-
-    response.on('end', () => {
-      if (onStream) onStream(text, true);
-      setState({});
-    });
-
-    return text;
-  } catch (error) {
-    console.error("Error during send:", error);
-    setState({ chatAllowed: true });
-    return "";
-  }
-};
-
-// Helper function to encode JSON as a string
-function jsonEncode(data: any): string {
-  return JSON.stringify(data);
-}
-
-// Helper function to decode JSON string
-function jsonDecode(data: string): any {
-  return JSON.parse(data);
-}
-
 
 // Function to get the title from AI
-async function getTitleAi(history: any[]): Promise<string> {
+async function getTitleAi(messages: CommonMessage[]): Promise<string> {
   try {
     // Mocking the API call using axios (Replace with your actual endpoint and payload)
-    const generated = await chat({
+    const model = useOllamaStore.getState().selectedModel!
+    const generatedResponse = await useOllamaStore.getState().ollama.chat({
+      model,
+      stream:false,
       messages: [
         {
           role: 'system',
@@ -169,12 +92,16 @@ async function getTitleAi(history: any[]): Promise<string> {
         },
         {
           role: 'user',
-          content: `\`\`\`\n${jsonEncode(history)}\n\`\`\``
+          content: messages.map(message => message.text || '').join('\n')
         }
       ]
     });
+    console.log(generatedResponse);
+    if (!generatedResponse?.done) {
+      return messages[messages.length - 1].text
+    }
 
-    let title = generated.data.message.content;
+    let title = generatedResponse?.message.content!;
     title = title.replaceAll("\n", " ");
 
     const terms = [
@@ -202,7 +129,7 @@ async function getTitleAi(history: any[]): Promise<string> {
 }
 
 // Function to set the title for AI
-async function setTitleAi(history: any[]): Promise<void> {
+async function setTitleAi(chatUuid: string, history: any[]): Promise<void> {
   try {
     const title = await getTitleAi(history);
     const tmp = JSON.parse(await AsyncStorage.getItem('chats') || '[]');
@@ -221,4 +148,64 @@ async function setTitleAi(history: any[]): Promise<void> {
     console.error("Error in setTitleAi: ", error);
   }
 }
-export { getHistory, send, getHistoryString, getTitleAi, setTitleAi };
+const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] => {
+
+  return messages.map(message => {
+    const { role = MessageRole.ASSISTANT, type = "text" } = message
+    switch (type) {
+      case "text":
+        return ({
+          role: role,
+          content: message.text!
+        })
+
+      case "image":
+      case "file":
+        return ({
+          role: role,
+          content: "",
+          images: [message.uri]
+        })
+      case "unsupported":
+        return ({
+          role: role,
+          content: ""
+        })
+
+      case "custom":
+        return ({
+          role: role,
+          content: ""
+        })
+    }
+  })
+}
+
+const getAssistantMessageFromOllama = (ollamaResponse: ChatResponse): CommonMessage => {
+  return {
+    id: uuidv4(),
+    text: ollamaResponse.message.content,
+    createdAt: ollamaResponse.created_at.valueOf(),
+    author: {
+      id: MessageRole.ASSISTANT,
+    },
+    type: 'text',
+    role: MessageRole.ASSISTANT
+  };
+};
+
+
+// get system prompt
+const getSystemMessage = (text: string): CommonMessage => {
+  return {
+    id: uuidv4(),
+    text,
+    createdAt: Date.now(),
+    author: {
+      id: MessageRole.SYSTEM,
+    },
+    type: 'text',
+    role: MessageRole.SYSTEM
+  };
+};
+export { getHistory, getHistoryString, getTitleAi, setTitleAi, getAssistantMessageFromOllama, getSystemMessage, getOllamaMessageFromChatMessage };
