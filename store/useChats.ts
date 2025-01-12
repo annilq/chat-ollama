@@ -57,10 +57,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
     try {
       const chats = get().chats
       const chat = chats.find(chat => chat.id === chatId)
-      console.log(chat);
-
       if (chat) {
         set({ chat: { ...chat, messages: chat.messages.filter(message => message.role != MessageRole.SYSTEM) || [] } });
+      } else {
+        set({ chat: undefined });
       }
     } catch (error) {
     }
@@ -75,7 +75,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
       } else {
         chats.push(chat!)
       }
-      console.log(chats);
 
       await AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
       set({ chats })
@@ -124,7 +123,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const ollamaMessage = getAssistantMessageFromOllama(response)
         const updatedMessages = [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages]
         set({ chat: { ...get().chat!, messages: updatedMessages } });
-        
+
         const config = useConfigStore.getState().config
 
         if (config.generateTitles) {
@@ -140,6 +139,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
   clearError: () => set({ error: null }),
+
 }));
 
 export default useChatStore;

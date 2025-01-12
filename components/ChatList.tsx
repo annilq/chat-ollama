@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import useChatStore, { Chat } from "@/store/useChats";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
@@ -5,14 +6,14 @@ import { List } from "react-native-paper";
 
 
 export function ChatList(props: DrawerContentComponentProps) {
-  const { chats } = useChatStore()
-  console.log(chats);
+  const { chats, getChat } = useChatStore()
 
   return (chats.map(chat => (
     <ChatItem
       data={chat}
       key={chat.id}
       onPress={() => {
+        router.push(`/chat/${chat.id}`);
         props.navigation.dispatch(DrawerActions.closeDrawer())
       }}
     />)));

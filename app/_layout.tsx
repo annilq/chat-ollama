@@ -31,12 +31,12 @@ export default function RootLayout() {
               drawerContent={(props) => <DrawerContent {...props} />}
             >
               <Drawer.Screen
-                name="index"
+                name="chat/[id]" // This creates a dynamic route
                 options={{
                   drawerLabelStyle: {
                     color: "current"
                   },
-                  title: 'New Chat',
+                  title: 'Chat',
                   headerShown: true,
                   header: () => <ChatHeader />,
                   drawerIcon: ({ focused, size, color }) => (
@@ -45,7 +45,8 @@ export default function RootLayout() {
                       size={size}
                     />
                   ),
-                }} />
+                }}
+              />
               <Drawer.Screen
                 name="setting"
                 options={{
