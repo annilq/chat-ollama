@@ -3,6 +3,7 @@ import { DrawerContentScrollView, DrawerItemList, DrawerContentComponentProps } 
 import Divider from "./Divider";
 import DrawerHeader from "./DrawerHeader";
 import { ChatList } from "./ChatList";
+import { CustomDrawerItems } from "./CustomDrawerItems";
 
 export function DrawerContent(props: DrawerContentComponentProps) {
 
@@ -10,7 +11,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
     <DrawerContentScrollView {...props}>
       <DrawerHeader />
       <Divider />
-      <DrawerItemList {...props} />
+      <CustomDrawerItems {...props} />
       <Divider />
       <ChatList {...props} />
     </DrawerContentScrollView>
