@@ -183,6 +183,9 @@ const App = () => {
       renderBubble={renderBubble}
       sendButtonVisibilityMode="always"
       user={user}
+      textInputProps={{
+        readOnly: !!isSending,
+      }}
       theme={{
         ...defaultTheme,
         colors: {
