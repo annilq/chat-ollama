@@ -1,6 +1,8 @@
 // import { ollama } from "@/util/OllamaApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
+import { produce } from "immer"
+
 import { v4 as uuidv4 } from 'uuid';
 
 import { useOllamaStore } from './useOllamaStore';
@@ -93,6 +95,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
       return
     }
+
     if (!get().chat) {
       set({
         chat: {
@@ -104,14 +107,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
         }
       })
     }
-    const currentMessages = get().chat!.messages;
 
-    const updatedMessages = [{ ...message, loading: true, role: MessageRole.USER }, ...currentMessages];
+    const chat = get().chat!;
 
-    set({ chat: { ...get().chat!, messages: updatedMessages }, isSending: true });
+    const nextChat = produce(chat, draft => {
+      draft.messages = [{ ...message, loading: true, role: MessageRole.USER }, ...draft.messages]
+    })
+
+    set({ chat: nextChat, isSending: true });
 
     try {
-      const messages = getOllamaMessageFromChatMessage(updatedMessages);
+      const messages = getOllamaMessageFromChatMessage(nextChat.messages);
 
       const response = await useOllamaStore.getState().ollama.chat({
         model,
@@ -120,22 +126,30 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
       if (response?.done) {
-        const [lastmessage, ...currentMessages] = get().chat?.messages!;
         const ollamaMessage = getAssistantMessageFromOllama(response)
-        const updatedMessages = [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages]
+
+        const chat = get().chat!;
+        const nextChat = produce(chat, draft => {
+          const [lastmessage, ...currentMessages] = draft.messages!;
+          draft.messages = [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages]
+        })
         // set isSending false while the response is returnedj
-        set({ chat: { ...get().chat!, messages: updatedMessages },isSending: false });
+        set({ chat: nextChat, isSending: false });
 
         const config = useConfigStore.getState().config
 
         if (config.generateTitles) {
-          const title = await getTitleAi(updatedMessages)
+          const title = await getTitleAi(get().chat!.messages)
           set({ chat: { ...get().chat!, title } });
         }
         get().saveChat()
       }
     } catch (error) {
       set({ error: 'Error generating response' });
+      const nextChat = produce(get().chat!, draft => {
+        draft.messages![draft.messages.length - 1].loading = false
+      })
+      set({ chat: nextChat });
     } finally {
       set({ isSending: false });
     }

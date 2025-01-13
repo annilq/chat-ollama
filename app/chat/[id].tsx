@@ -156,6 +156,10 @@ const App = () => {
     // snackState.setSnack({ visible: true, message: message.text })
   }
 
+  const handleCancelRequest = useCallback(() => {
+    useOllamaStore.getState().ollama.cancelRequest();
+  }, []);
+
   useEffect(() => {
     const host = 'http://localhost:11434'; // You can make this configurable
     initialize(host);
@@ -195,7 +199,11 @@ const App = () => {
           inputBackground: "#efefef"
         },
         icons: {
-          sendButtonIcon: () => !isSending ? <IconButton icon={"send-outline"} /> : <IconButton icon={"pause-circle"} />
+          sendButtonIcon: () => !isSending ? (
+            <IconButton icon={"send-outline"} />
+          ) : (
+            <IconButton icon={"pause-circle"} onPress={handleCancelRequest} />
+          )
         }
       }}
     />

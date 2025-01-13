@@ -1,4 +1,3 @@
-
 // Types for API responses and requests
 
 import { ChatResponse, ChatRequest, PullRequest, GenerateResponse, GenerateRequest, ListResponse, ModelResponse } from "ollama";
@@ -12,12 +11,21 @@ export enum MessageRole {
 
 class OllamaAPI {
   private baseURL: string;
+  private abortController: AbortController | null = null;
 
   constructor(host: string = 'http://localhost:11434') {
     this.baseURL = host.replace(/\/$/, '');
   }
-
+  cancelRequest() {
+    if (this.abortController) {
+      this.abortController.abort();
+      this.abortController = null;
+    }
+  }
   private async fetchWithError(endpoint: string, options: RequestInit): Promise<any> {
+
+    this.abortController = new AbortController();
+
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
         ...options,
@@ -25,6 +33,7 @@ class OllamaAPI {
           'Content-Type': 'application/json',
           ...options.headers,
         },
+        signal: this.abortController.signal
       });
 
       if (!response.ok) {
