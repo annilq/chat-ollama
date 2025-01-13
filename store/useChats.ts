@@ -59,6 +59,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const chat = chats.find(chat => chat.id === chatId)
       if (chat) {
         set({ chat: { ...chat, messages: chat.messages.filter(message => message.role != MessageRole.SYSTEM) || [] } });
+        useOllamaStore.getState().setSelectedModel(chat.model)
       } else {
         set({ chat: undefined });
       }
@@ -122,7 +123,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const [lastmessage, ...currentMessages] = get().chat?.messages!;
         const ollamaMessage = getAssistantMessageFromOllama(response)
         const updatedMessages = [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages]
-        set({ chat: { ...get().chat!, messages: updatedMessages } });
+        // set isSending false while the response is returnedj
+        set({ chat: { ...get().chat!, messages: updatedMessages },isSending: false });
 
         const config = useConfigStore.getState().config
 

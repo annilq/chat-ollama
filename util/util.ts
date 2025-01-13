@@ -178,7 +178,7 @@ const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] =
           content: ""
         })
     }
-  })
+  }).reverse()
 }
 
 const getAssistantMessageFromOllama = (ollamaResponse: ChatResponse): CommonMessage => {
