@@ -35,7 +35,10 @@ export interface ChatState {
   isSending: boolean;
   error: string | null;
   initializeChats: () => Promise<void>;
-  deleteChat: (chatId?: string) => Promise<void>;
+  updateChat: () => Promise<void>;
+  deleteChat: (chatId: string) => Promise<void>;
+  deleteMessage: (messageId: string) => Promise<void>;
+  updateMessage: (messageId: string, message: CommonMessage) => Promise<void>;
   getChat: (chatId?: string) => Promise<void>;
   saveCurrentChat: () => Promise<void>;
   sendMessage: (message: MessageType.Any) => void;
@@ -71,12 +74,53 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
-  deleteChat: async (chatId?: string) => {
+  deleteChat: async (chatId: string) => {
     try {
       const chats: Chat[] = get().chats
       const updateChats = chats.filter(chat => chat.id !== chatId)
       await AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(updateChats));
       set({ chats: updateChats })
+    } catch (error) {
+    }
+  },
+
+  updateChat: async () => {
+    const { chat, chats } = get()
+    try {
+      const nextChats = produce(chats, draft => {
+        const chatIndex = draft.findIndex(item => item.id === chat!.id)
+        draft[chatIndex] = chat!
+      })
+
+      await AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(nextChats));
+      set({ chat: chat, chats: nextChats })
+    } catch (error) {
+    }
+  },
+
+  deleteMessage: async (messageId: string) => {
+    try {
+      const { chat } = get()
+      const nextChat = produce(chat!, draft => {
+        draft.messages = draft.messages.filter(message => message.id !== messageId)
+      })
+      set({ chat: nextChat })
+      get().updateChat()
+    } catch (error) {
+    }
+  },
+
+  updateMessage: async (messageId: string, message: CommonMessage) => {
+    try {
+      const { chat } = get()
+      const nextChat = produce(chat!, draft => {
+        const messageIndex = draft.messages.findIndex(message => message.id !== messageId)
+        draft.messages[messageIndex] = message
+      })
+      set({ chat: nextChat })
+
+      get().updateChat()
+
     } catch (error) {
     }
   },
@@ -97,9 +141,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ error: 'Error saving chat history' });
     }
   },
-  saveChats: async () => {
 
-  },
   sendMessage: async (message: MessageType.Any) => {
     const model = useOllamaStore.getState().selectedModel!
     if (!model) {

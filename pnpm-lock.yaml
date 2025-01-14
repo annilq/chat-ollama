@@ -29,6 +29,9 @@ importers:
       '@react-native-async-storage/async-storage':
         specifier: 1.23.1
         version: 1.23.1(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))
+      '@react-native-clipboard/clipboard':
+        specifier: ^1.16.0
+        version: 1.16.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
       '@react-navigation/bottom-tabs':
         specifier: ^7.0.0
         version: 7.2.0(@react-navigation/native@7.0.14(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native-safe-area-context@4.12.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native-screens@4.1.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
@@ -1162,6 +1165,19 @@ packages:
     resolution: {integrity: sha512-Qd2kQ3yi6Y3+AcUlrHxSLlnBvpdCEMVGFlVBneVOjaFaPU61g1huc38g339ysXspwY1QZA2aNhrk/KlHGO+ewA==}
     peerDependencies:
       react-native: ^0.0.0-0 || >=0.60 <1.0
+
+  '@react-native-clipboard/clipboard@1.16.0':
+    resolution: {integrity: sha512-EJxpBklnmZyrGAzqgn4DJ1vFwrCPNb43nn0zHvgM4EveJ6l2kIOEksANPp09Wbdpqx2X4nn0WkzWf3V+IgASPQ==}
+    peerDependencies:
+      react: '>= 16.9.0'
+      react-native: '>= 0.61.5'
+      react-native-macos: '>= 0.61.0'
+      react-native-windows: '>= 0.61.0'
+    peerDependenciesMeta:
+      react-native-macos:
+        optional: true
+      react-native-windows:
+        optional: true
 
   '@react-native/assets-registry@0.76.5':
     resolution: {integrity: sha512-MN5dasWo37MirVcKWuysRkRr4BjNc81SXwUtJYstwbn8oEkfnwR9DaqdDTo/hHOnTdhafffLIa2xOOHcjDIGEw==}
@@ -6372,6 +6388,11 @@ snapshots:
   '@react-native-async-storage/async-storage@1.23.1(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))':
     dependencies:
       merge-options: 3.0.4
+      react-native: 0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1)
+
+  '@react-native-clipboard/clipboard@1.16.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
       react-native: 0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1)
 
   '@react-native/assets-registry@0.76.5': {}
