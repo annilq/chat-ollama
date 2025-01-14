@@ -23,6 +23,7 @@ export interface Chat {
   messages: CommonMessage[];
   model: string;
   id: string;
+  userId:string;
   title: string;
   createdAt: Date
 }
@@ -41,7 +42,7 @@ export interface ChatState {
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
-  chats: [],
+  chats: [] as Chat[],
   useSystem: false,
   chat: undefined,
   messages: [],

@@ -45,14 +45,16 @@ const renderBubble = ({
   )
 }
 
-const App = () => {
+const ChatApp = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
   const snackState = useSnackBarStore()
   const { checkService, initialize } = useOllamaStore()
   const { sendMessage, chat, isSending, initializeChats, getChat } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
 
-  const user = { id: useId() }
+  // we set a constant userId 
+  // when we persist chat we can know which message is user
+  const user = { id: "user" }
 
   const messages = chat?.messages || []
   const handleAttachmentPress = () => {
@@ -210,5 +212,5 @@ const App = () => {
   )
 }
 
-export default App
+export default ChatApp
 
