@@ -23,7 +23,7 @@ export interface Chat {
   messages: CommonMessage[];
   model: string;
   id: string;
-  userId:string;
+  userId: string;
   title: string;
   createdAt: Date
 }
@@ -35,8 +35,9 @@ export interface ChatState {
   isSending: boolean;
   error: string | null;
   initializeChats: () => Promise<void>;
+  deleteChat: (chatId?: string) => Promise<void>;
   getChat: (chatId?: string) => Promise<void>;
-  saveChat: () => Promise<void>;
+  saveCurrentChat: () => Promise<void>;
   sendMessage: (message: MessageType.Any) => void;
   clearError: () => void;
 }
@@ -58,7 +59,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   getChat: async (chatId?: string) => {
     try {
-      const chats = get().chats
+      const chats: Chat[] = get().chats
       const chat = chats.find(chat => chat.id === chatId)
       if (chat) {
         set({ chat: { ...chat, messages: chat.messages.filter(message => message.role != MessageRole.SYSTEM) || [] } });
@@ -70,7 +71,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
-  saveChat: async () => {
+  deleteChat: async (chatId?: string) => {
+    try {
+      const chats: Chat[] = get().chats
+      const updateChats = chats.filter(chat => chat.id !== chatId)
+      await AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(updateChats));
+      set({ chats: updateChats })
+    } catch (error) {
+    }
+  },
+
+  saveCurrentChat: async () => {
     const { chat, chats } = get()!
     try {
       const index = chats.findIndex(item => item.id === chat?.id)
@@ -86,7 +97,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ error: 'Error saving chat history' });
     }
   },
+  saveChats: async () => {
 
+  },
   sendMessage: async (message: MessageType.Any) => {
     const model = useOllamaStore.getState().selectedModel!
     if (!model) {
@@ -143,7 +156,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           const title = await getTitleAi(get().chat!.messages)
           set({ chat: { ...get().chat!, title } });
         }
-        get().saveChat()
+        get().saveCurrentChat()
       }
     } catch (error) {
       set({ error: 'Error generating response' });
