@@ -1,3 +1,15 @@
+### plan to do
+1. when user select a file or a photo 
+   1. send it to ollama with default prompt(user can config)
+   2. send it next time with the text message(if ollam can remember the context ,this step is no need)
+   3. if ollama understand the file ,do not send the file every time,just send the content
+
+2. use custom message(text required) for ui message contain ollama message
+
+3. chat message editable
+
+4. markdown support(config) 
+
 ### Thanks to below Apps
 
 - [react-native-chat-ui](https://github.com/flyerhq/react-native-chat-ui)

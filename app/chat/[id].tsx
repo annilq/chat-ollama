@@ -17,12 +17,6 @@ import { useOllamaStore } from '@/store/useOllamaStore'
 import { CommonMessage, useChatStore } from '@/store/useChats'
 import { IconButton } from 'react-native-paper'
 
-// Add a new interface for pending image
-interface PendingImage {
-  uri: string;
-  base64: string;
-}
-
 const renderBubble = ({
   child,
   message,
@@ -64,7 +58,7 @@ const ChatApp = () => {
   const user = { id: "user" }
 
   const messages = chat?.messages || []
-  
+
   const handleAttachmentPress = () => {
     showActionSheetWithOptions(
       {
@@ -103,26 +97,32 @@ const ChatApp = () => {
     } catch { }
   }
 
+
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
-      base64: true, // Enable base64
     });
-    
-    if (!result.canceled && result.assets?.[0]) {
-      const asset = result.assets[0];
-      setPendingImage({
-        uri: asset.uri,
-        base64: asset.base64 || '',
-      });
-      
-      // Show a snackbar to indicate image is ready
-      // useSnackBarStore.getState().setSnack({
-      //   visible: true,
-      //   message: "Image added - type your message and send"
-      // });
+    if (!result.canceled) {
+    } else {
+      alert('You did not select any image.');
+    }
+    const response = result.assets?.[0]
+
+    if (response?.base64) {
+      const imageMessage: MessageType.Image = {
+        author: user,
+        createdAt: Date.now(),
+        height: response.height,
+        id: uuidv4(),
+        name: response.fileName ?? response.uri?.split('/').pop() ?? '🖼',
+        size: response.fileSize ?? 0,
+        type: 'image',
+        uri: response.uri,
+        width: response.width,
+      }
+      sendMessage(imageMessage)
     }
   }
 
@@ -136,12 +136,13 @@ const ChatApp = () => {
 
       await Clipboard.setString(message.text)
 
-      // useSnackBarStore.getState().setSnack({
-      //   visible: true,
-      //   message: "message is copy to Clipboard"
-      // });
+      useSnackBarStore.getState().setSnack({
+        visible: true,
+        message: "message is copy to Clipboard"
+      });
     }
   }
+  
   const handlePreviewDataFetched = ({
     message,
     previewData,
@@ -165,20 +166,7 @@ const ChatApp = () => {
       type: 'text',
     }
 
-    // If we have a pending image, send both image and text
-    if (pendingImage) {
-      const combinedMessage = {
-        ...textMessage,
-        images: [pendingImage.base64],
-        // You might want to add the image preview to the UI
-        imageUri: pendingImage.uri,
-      }
-      sendMessage(combinedMessage)
-      setPendingImage(null) // Clear the pending image
-    } else {
-      // Send text-only message as before
-      sendMessage(textMessage)
-    }
+    sendMessage(textMessage)
   }
 
   const handleCancelRequest = useCallback(() => {
@@ -219,7 +207,7 @@ const ChatApp = () => {
       ]
     );
   };
-  
+
   const handleLongPress = (message: MessageType.Any) => {
     showActionSheetWithOptions(
       {
@@ -241,8 +229,6 @@ const ChatApp = () => {
     );
   };
 
-  // Add a state for pending image
-  const [pendingImage, setPendingImage] = useState<PendingImage | null>(null);
 
   return (
     <Chat
@@ -261,11 +247,7 @@ const ChatApp = () => {
           style={{ height: 50, width: 38 }}
         />)}
       textInputProps={{
-        readOnly: !!isSending,
-        placeholder: pendingImage 
-          ? "Type your question about the image..." 
-          : "Type your message...",
-
+        readOnly: !!isSending
       }}
       theme={{
         ...defaultTheme,
