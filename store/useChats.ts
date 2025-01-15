@@ -16,8 +16,11 @@ import { useConfigStore } from "./useConfig";
 
 const CHAT_STORAGE_KEY = '@ollama_chat_history';
 
+interface Metadata {
+  text: string
+}
 // common Message for Both chat UI and ollama
-export type CommonMessage = MessageType.Any & { role: MessageRole, loading?: boolean }
+export type CommonMessage = MessageType.Any & { role: MessageRole, loading?: boolean, metadata?: Metadata }
 
 export interface Chat {
   messages: CommonMessage[];
@@ -31,14 +34,16 @@ export interface Chat {
 export interface ChatState {
   chats: Chat[];
   chat?: Chat;
+  editMessageId: string | false
   useSystem?: Boolean;
   isSending: boolean;
   error: string | null;
   initializeChats: () => Promise<void>;
   updateChat: () => Promise<void>;
   deleteChat: (chatId: string) => Promise<void>;
+  showMessageInput: (messageId: string) => Promise<void>;
   deleteMessage: (messageId: string) => Promise<void>;
-  updateMessage: (messageId: string, message: CommonMessage) => Promise<void>;
+  updateMessage: (messageId: string, message: string) => Promise<void>;
   getChat: (chatId?: string) => Promise<void>;
   saveCurrentChat: () => Promise<void>;
   sendMessage: (message: MessageType.Any) => void;
@@ -50,6 +55,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   useSystem: false,
   chat: undefined,
   messages: [],
+  editMessageId: false,
   isSending: false,
   error: null,
 
@@ -110,14 +116,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
-  updateMessage: async (messageId: string, message: CommonMessage) => {
+  showMessageInput: async (messageId: string) => {
+    try {
+      set({ editMessageId: messageId })
+    } catch (error) {
+    }
+  },
+
+  updateMessage: async (messageId: string, message: string) => {
     try {
       const { chat } = get()
       const nextChat = produce(chat!, draft => {
-        const messageIndex = draft.messages.findIndex(message => message.id !== messageId)
-        draft.messages[messageIndex] = message
+        const messageIndex = draft.messages.findIndex(message => message.id === messageId)
+        if (draft.messages[messageIndex].type === "text") {
+          draft.messages[messageIndex].text = message
+        } else if (draft.messages[messageIndex].type === "image") {
+          draft.messages[messageIndex].metadata = { text: message }
+        }
       })
-      set({ chat: nextChat })
+      set({ chat: nextChat, editMessageId: false })
 
       get().updateChat()
 
@@ -194,7 +211,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
               responseMessage,
               {
                 ...lastmessage,
-                metadata: { message: response.message.content },
+                // metadata can store user custom info
+                metadata: { text: response.message.content },
                 loading: false
               }, ...currentMessages
             ]

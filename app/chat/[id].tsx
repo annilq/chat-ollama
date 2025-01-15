@@ -16,6 +16,7 @@ import { useSnackBarStore } from '@/store/useSnackbar'
 import { useOllamaStore } from '@/store/useOllamaStore'
 import { CommonMessage, useChatStore } from '@/store/useChats'
 import { IconButton } from 'react-native-paper'
+import { MessageEdit } from '@/components/MessageEdit'
 
 const renderBubble = ({
   child,
@@ -66,7 +67,7 @@ const ChatApp = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
   const snackState = useSnackBarStore()
   const { checkService, initialize } = useOllamaStore()
-  const { sendMessage, chat, isSending, initializeChats, getChat, deleteMessage } = useChatStore()
+  const { sendMessage, chat, isSending, initializeChats, getChat, deleteMessage, showMessageInput } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
 
   // we set a constant userId 
@@ -233,10 +234,9 @@ const ChatApp = () => {
         cancelButtonIndex: 2,
       },
       (selectedIndex) => {
-
         switch (selectedIndex) {
           case 0:
-            // Copy title logic here if needed
+            showMessageInput(message.id)
             break;
           case 1:
             handleDelete(message.id);
@@ -248,41 +248,44 @@ const ChatApp = () => {
 
 
   return (
-    <Chat
-      messages={messages}
-      onAttachmentPress={handleAttachmentPress}
-      onMessagePress={handleMessagePress}
-      onMessageLongPress={handleLongPress}
-      onPreviewDataFetched={handlePreviewDataFetched}
-      onSendPress={handleSendPress}
-      renderBubble={renderBubble}
-      sendButtonVisibilityMode="always"
-      user={user}
-      emptyState={() => (
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={{ height: 50, width: 38 }}
-        />)}
-      textInputProps={{
-        readOnly: !!isSending
-      }}
-      theme={{
-        ...defaultTheme,
-        colors: {
-          ...defaultTheme.colors,
-          primary: "#fff",
-          inputText: "#000",
-          inputBackground: "#efefef"
-        },
-        icons: {
-          sendButtonIcon: () => !isSending ? (
-            <IconButton icon={"send-outline"} />
-          ) : (
-            <IconButton icon={"pause-circle"} onPress={handleCancelRequest} />
-          )
-        }
-      }}
-    />
+    <>
+      <Chat
+        messages={messages}
+        onAttachmentPress={handleAttachmentPress}
+        onMessagePress={handleMessagePress}
+        onMessageLongPress={handleLongPress}
+        onPreviewDataFetched={handlePreviewDataFetched}
+        onSendPress={handleSendPress}
+        renderBubble={renderBubble}
+        sendButtonVisibilityMode="always"
+        user={user}
+        emptyState={() => (
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={{ height: 50, width: 38 }}
+          />)}
+        textInputProps={{
+          readOnly: !!isSending
+        }}
+        theme={{
+          ...defaultTheme,
+          colors: {
+            ...defaultTheme.colors,
+            primary: "#fff",
+            inputText: "#000",
+            inputBackground: "#efefef"
+          },
+          icons: {
+            sendButtonIcon: () => !isSending ? (
+              <IconButton icon={"send-outline"} />
+            ) : (
+              <IconButton icon={"pause-circle"} onPress={handleCancelRequest} />
+            )
+          }
+        }}
+      />
+      <MessageEdit />
+    </>
   )
 }
 
