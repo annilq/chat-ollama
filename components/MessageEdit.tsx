@@ -68,7 +68,7 @@ export const MessageEdit = () => {
 						mode="outlined"
 						multiline
 						style={styles.textInput}
-						label="behavior"
+						label="edit message"
 						onChangeText={setInputText}
 						value={inputText}
 						textAlignVertical='top'
