@@ -5,6 +5,7 @@ import { MessageRole } from './ollama_api';
 import { ChatResponse, Message } from 'ollama';
 import { Chat, CommonMessage } from '@/store/useChats';
 import { useOllamaStore } from '@/store/useOllamaStore';
+import { MessageType } from '@flyerhq/react-native-chat-ui';
 
 let images: string[] = [];
 
@@ -84,7 +85,7 @@ async function getTitleAi(messages: CommonMessage[]): Promise<string> {
     const model = useOllamaStore.getState().selectedModel!
     const generatedResponse = await useOllamaStore.getState().ollama.chat({
       model,
-      stream:false,
+      stream: false,
       messages: [
         {
           role: 'system',
@@ -156,10 +157,17 @@ const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] =
       case "text":
         return ({
           role: role,
-          content: message.text!
+          content: (message as MessageType.Text).text!
         })
 
       case "image":
+        // split base64
+        const base64 = (message as MessageType.Image).uri.split("base64,")[1]
+        return ({
+          role: role,
+          content: "",
+          images: [base64]
+        })
       case "file":
         return ({
           role: role,

@@ -182,12 +182,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
       });
 
       if (response?.done) {
-        const ollamaMessage = getAssistantMessageFromOllama(response)
+        const responseMessage = getAssistantMessageFromOllama(response)
 
         const chat = get().chat!;
         const nextChat = produce(chat, draft => {
           const [lastmessage, ...currentMessages] = draft.messages!;
-          draft.messages = [ollamaMessage, { ...lastmessage, loading: false }, ...currentMessages]
+          if (lastmessage.type === "image") {
+            draft.messages = [
+              // think if show the image response to user or just set the response to lastmessage.content
+              // when user edit image ,it can update the vision result
+              responseMessage,
+              {
+                ...lastmessage,
+                metadata: { message: response.message.content },
+                loading: false
+              }, ...currentMessages
+            ]
+          } else {
+            draft.messages = [responseMessage, { ...lastmessage, loading: false }, ...currentMessages]
+          }
         })
         // set isSending false while the response is returnedj
         set({ chat: nextChat, isSending: false });

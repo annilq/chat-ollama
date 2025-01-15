@@ -29,19 +29,35 @@ const renderBubble = ({
   return (
     <View
       style={{
-        display: "flex",
-        gap: 4,
-        flexDirection: "row",
-        backgroundColor: defaultTheme.colors.inputBackground,
         borderRadius: 20,
-        paddingInline: 20,
-        paddingBlock: 10,
-        borderWidth: 1,
         overflow: 'hidden',
+        position: "relative",
+        ...message.type === "text" && {
+          display: "flex",
+          gap: 4,
+          flexDirection: "row",
+          paddingInline: 20,
+          paddingBlock: 10,
+          borderWidth: 1,
+          backgroundColor: defaultTheme.colors.inputBackground,
+        }
       }}
     >
       {message.type === "text" ? <Text style={{ color: "#fff" }}>{message.text}</Text> : child}
-      {message.loading ? <ActivityIndicator animating={true} /> : false}
+      {message.loading ? (
+        <View
+          style={{
+            ...message.type === "image" && {
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }
+          }}>
+          <ActivityIndicator animating={true} />
+        </View>
+      ) : false}
     </View>
   )
 }
@@ -103,6 +119,7 @@ const ChatApp = () => {
       mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
+      base64: true,
     });
     if (!result.canceled) {
     } else {
@@ -119,7 +136,7 @@ const ChatApp = () => {
         name: response.fileName ?? response.uri?.split('/').pop() ?? '🖼',
         size: response.fileSize ?? 0,
         type: 'image',
-        uri: response.uri,
+        uri: `data:image/jpeg;base64,${response.base64}`,
         width: response.width,
       }
       sendMessage(imageMessage)
@@ -142,7 +159,7 @@ const ChatApp = () => {
       });
     }
   }
-  
+
   const handlePreviewDataFetched = ({
     message,
     previewData,
