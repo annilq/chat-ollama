@@ -92,7 +92,7 @@ const Setting = () => {
       <List.Section>
         <List.Item
           style={listItemStyle}
-          title="brain"
+          title="behavior"
           left={() => <List.Icon icon="head-cog" />}
           onPress={() => {
             router.push("/setting/assistant")

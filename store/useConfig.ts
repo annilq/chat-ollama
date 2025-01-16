@@ -1,26 +1,33 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage, StateStorage } from 'zustand/middleware'
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persist, createJSONStorage } from 'zustand/middleware'
+import { storage } from '@/util/storage';
 
-// Custom storage object
-const storage: StateStorage = {
-  getItem: async (name: string): Promise<string | null> => {
-    console.log(name, 'has been retrieved')
-    return (await AsyncStorage.getItem(name)) || null
-  },
-  setItem: async (name: string, value: string): Promise<void> => {
-    console.log(name, 'with value', value, 'has been saved')
-    await AsyncStorage.setItem(name, value)
-  },
-  removeItem: async (name: string): Promise<void> => {
-    console.log(name, 'has been deleted')
-    await AsyncStorage.removeItem(name)
-  },
-}
+const noMarkdownPrompt = "\nYou must not use markdown or any other formatting language in any way!";
+
+
+const DEFAULT_PROMPT = "You are a helpful assistant"
+
+export type RequestType = "stream" | "generate"
+export type theme = "dark" | "light" | "system"
 
 interface Config {
-  format: string
+  // setting page config
+  systemPrompt: string
+  useSystem: boolean
+  useMarkdown: boolean
+  // chat config
   generateTitles: boolean
+  requestType: RequestType // react native fetch doesn't support stream
+  messageEditable: boolean
+  clearChatWhenResetModel: boolean
+  showConfirmWhenChatDelete: boolean
+  timeoutTimes: number
+  // UI
+  showTipsInDrawer: boolean
+  showModelTag: boolean
+  theme: "dark" | "light" | "system"
+  enableHaptic: boolean
+
 }
 
 export interface ConfigState {
@@ -31,7 +38,23 @@ export interface ConfigState {
 export const useConfigStore = create(
   persist<ConfigState>(
     (set, get) => ({
-      config: { format: "", generateTitles: true },
+      config: {
+        useSystem: false,
+        systemPrompt: DEFAULT_PROMPT,
+        useMarkdown: false,
+
+        generateTitles: true,
+        requestType: "generate",
+        messageEditable: true,
+        clearChatWhenResetModel: false,
+        showConfirmWhenChatDelete: true,
+        timeoutTimes: 1,
+
+        showTipsInDrawer: true,
+        showModelTag: false,
+        theme: "system",
+        enableHaptic: true
+      },
       setConfig: (config) => set({ config: { ...(get().config), ...config } }),
     }),
     {
