@@ -5,24 +5,55 @@ import { StyleProp, View, Text } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
 import Divider from '@/components/Divider';
 import { useAppTheme } from '@/components/PaperTheme';
+import { useOllamaStore } from '@/store/useOllamaStore';
+
+function isValidURLWithFallback(urlstr: string) {
+  try {
+    const newurl = urlstr.includes("://") ? urlstr : `http://${urlstr}`;
+    return URL.canParse(newurl);
+  } catch (error) {
+    return false;
+  }
+}
 
 const listItemStyle: StyleProp<any> = { paddingHorizontal: 6, borderRadius: 6, overflow: "hidden" }
 
 const Setting = () => {
   const [text, setText] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
+  const [isChecking, setIsChecking] = React.useState(false);
+  const { initialize, checkService } = useOllamaStore();
 
   const {
     colors: { error: errorColor },
   } = useAppTheme();
 
-  const validateInput = (input: string) => {
-    if (input.trim() === "") {
-      setError("invalid_host");
+  const validateInput = async (input: string) => {
+    const inputText = input.trim()
+    if (!inputText) {
+      setError(null);
+      return
+    }
+    if (!isValidURLWithFallback(inputText)) {
+      setError("invalid_host_format");
       return false;
     }
-    setError(null);
-    return true;
+    setIsChecking(true);
+    try {
+      initialize(`http://${inputText}:11434`);
+      const isAvailable = await checkService();
+      if (!isAvailable) {
+        setError("ollama_service_unavailable");
+        return false;
+      }
+      setError(null);
+      return true;
+    } catch (err) {
+      setError("connection_failed");
+      return false;
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   const handleTextChange = (input: string) => {
@@ -37,12 +68,25 @@ const Setting = () => {
         onChangeText={handleTextChange}
         mode="outlined"
         label="host"
-        placeholder="host"
+        placeholder="localhost:11434"
         error={!!error}
+        disabled={isChecking}
+        autoCapitalize="none"
         left={<TextInput.Icon icon="plus" color={error ? errorColor : undefined} />}
-        right={<TextInput.Icon icon="content-save" color={error ? errorColor : undefined} />}
+        right={
+          isChecking ?
+            <TextInput.Icon icon="loading" color={error ? errorColor : undefined} /> :
+            <TextInput.Icon icon="content-save" color={error ? errorColor : undefined} />
+        }
       />
-      {error && <Text style={[getStyles("py-4"), { color: errorColor }]}>{error}</Text>}
+      {error && (
+        <Text style={[getStyles("py-4"), { color: errorColor }]}>
+          {error === "invalid_host_format" && "Invalid host format"}
+          {error === "invalid_ip_address" && "Invalid IP address"}
+          {error === "ollama_service_unavailable" && "Ollama service is not available"}
+          {error === "connection_failed" && "Failed to connect to Ollama service"}
+        </Text>
+      )}
 
       <Divider />
       <List.Section>

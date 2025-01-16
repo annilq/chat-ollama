@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StyleSheet } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
-import { Portal } from '@gorhom/portal';
 import { useChatStore } from '@/store/useChats'
 
 
@@ -46,11 +45,11 @@ export const MessageEdit = () => {
 			bottomSheetRef.current?.close();
 		}
 	};
-	const handleSheetChange = useCallback((index: number) => {
+	const handleSheetChange = (index: number) => {
 		if (index === -1) {
 			handleUpdateMessage()
 		}
-	}, []);
+	};
 	return (
 		<>
 			{/* <Portal> */}
