@@ -18,6 +18,8 @@ import { CommonMessage, useChatStore } from '@/store/useChats'
 import { IconButton } from 'react-native-paper'
 import { MessageEdit } from '@/components/MessageEdit'
 import { i18n } from '@/util/l10n/i18n'
+import { useConfigStore } from '@/store/useConfig'
+import { ChatDarkTheme, ChatLightTheme } from '@/util/theme'
 
 const renderBubble = ({
   child,
@@ -70,6 +72,7 @@ const ChatApp = () => {
   const { checkService, initialize } = useOllamaStore()
   const { sendMessage, chat, isSending, initializeChats, getChat, deleteMessage, showMessageInput } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
+  const { config: { theme } } = useConfigStore();
 
   // we set a constant userId 
   // when we persist chat we can know which message is user
@@ -80,7 +83,7 @@ const ChatApp = () => {
   const handleAttachmentPress = () => {
     showActionSheetWithOptions(
       {
-        options: [ i18n.t('takeImage'),  i18n.t('uploadImage'),  i18n.t('cancel')],
+        options: [i18n.t('takeImage'), i18n.t('uploadImage'), i18n.t('cancel')],
         cancelButtonIndex: 2,
       },
       (buttonIndex) => {
@@ -215,11 +218,11 @@ const ChatApp = () => {
       "Are you sure you want to delete this message?",
       [
         {
-          text: "Cancel",
+          text: i18n.t("deleteDialogCancel"),
           style: "cancel"
         },
         {
-          text: "Delete",
+          text: i18n.t("deleteDialogDelete"),
           style: "destructive",
           onPress: () => deleteMessage(messageId)
         }
@@ -230,7 +233,7 @@ const ChatApp = () => {
   const handleLongPress = (message: MessageType.Any) => {
     showActionSheetWithOptions(
       {
-        options: ["Edit", "Delete", "Cancel"],
+        options: [i18n.t("dialogEditMessageTitle"), i18n.t("deleteDialogDelete"), i18n.t("modelDialogAddAssuranceCancel")],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 2,
       },
@@ -269,13 +272,7 @@ const ChatApp = () => {
           readOnly: !!isSending
         }}
         theme={{
-          ...defaultTheme,
-          colors: {
-            ...defaultTheme.colors,
-            primary: "#fff",
-            inputText: "#000",
-            inputBackground: "#efefef"
-          },
+          ...(theme === "dark" ? ChatDarkTheme : ChatLightTheme),
           icons: {
             sendButtonIcon: () => !isSending ? (
               <IconButton icon={"send-outline"} />

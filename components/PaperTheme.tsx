@@ -1,25 +1,18 @@
 import { PaperProvider, MD3LightTheme as DefaultTheme, useTheme, Portal, Snackbar } from 'react-native-paper';
 import { PortalProvider } from '@gorhom/portal';
 import { useSnackBarStore } from "@/store/useSnackbar";
+import { useConfigStore } from '@/store/useConfig';
+import { PaperLightTheme, PaperDarkTheme } from '@/util/theme';
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    outline: "#000000",
-    primary: '#000000',
-    background: "#ffffff"
-  },
-};
-
-export type AppTheme = typeof theme;
+export type AppTheme = typeof PaperLightTheme;
 export const useAppTheme = () => useTheme<AppTheme>();
 
 export function PaperTheme({ children }: { children: React.ReactNode }) {
   const snackState = useSnackBarStore();
+  const { config: { theme } } = useConfigStore();
 
   return (
-    <PaperProvider theme={theme}>
+    <PaperProvider theme={theme === "dark" ? PaperDarkTheme : PaperLightTheme}>
       <PortalProvider>
         {children}
         <Portal>

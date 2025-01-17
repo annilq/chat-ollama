@@ -1,13 +1,25 @@
 import styles from '@/styles/style';
 import * as React from 'react';
-import { View } from 'react-native';
+import { Appearance, View } from 'react-native';
 import { Switch, List, SegmentedButtons } from 'react-native-paper';
 import Divider from '@/components/Divider';
-import { RequestType, useConfigStore } from '@/store/useConfig';
+import { RequestType, theme, useConfigStore } from '@/store/useConfig';
 import { i18n } from '@/util/l10n/i18n';
 
 export default () => {
-  const { config: { showModelTag, showTipsInDrawer, clearChatWhenResetModel, requestType, generateTitles, messageEditable, showConfirmWhenChatDelete, }, setConfig } = useConfigStore()
+  const {
+    config: {
+      theme,
+      showModelTag,
+      showTipsInDrawer,
+      clearChatWhenResetModel,
+      requestType,
+      generateTitles,
+      messageEditable,
+      showConfirmWhenChatDelete,
+    },
+    setConfig
+  } = useConfigStore()
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
@@ -69,6 +81,26 @@ export default () => {
           title="do not keep preload model"
           right={(props) => <Switch {...props} value={isSwitchOn} onValueChange={(value) => setConfig({ showModelTag: value })} />}
         /> */}
+        <Divider />
+
+        <SegmentedButtons
+          value={theme}
+          onValueChange={(value) => setConfig({ theme: value as theme })}
+          buttons={[
+            {
+              value: 'light',
+              label: i18n.t("settingsBrightnessLight"),
+            },
+            {
+              value: 'dark',
+              label: i18n.t("settingsBrightnessDark"),
+            },
+            {
+              value: Appearance.getColorScheme()!,
+              label: i18n.t("settingsBrightnessSystem"),
+            },
+          ]}
+        />
       </List.Section>
     </View>
   );

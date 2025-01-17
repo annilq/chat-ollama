@@ -1,14 +1,18 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { storage } from '@/util/storage';
+import { Appearance } from 'react-native';
+
+const colorScheme = Appearance.getColorScheme();
 
 const noMarkdownPrompt = "\nYou must not use markdown or any other formatting language in any way!";
 
+console.log(colorScheme);
 
 const DEFAULT_PROMPT = "You are a helpful assistant"
 
 export type RequestType = "stream" | "generate"
-export type theme = "dark" | "light" | "system"
+export type theme = "dark" | "light"
 
 interface Config {
   // setting page config
@@ -52,7 +56,7 @@ export const useConfigStore = create(
 
         showTipsInDrawer: true,
         showModelTag: false,
-        theme: "system",
+        theme: colorScheme!,
         enableHaptic: true
       },
       setConfig: (config) => set({ config: { ...(get().config), ...config } }),
