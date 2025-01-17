@@ -3,6 +3,7 @@ import { PortalProvider } from '@gorhom/portal';
 import { useSnackBarStore } from "@/store/useSnackbar";
 import { useConfigStore } from '@/store/useConfig';
 import { PaperLightTheme, PaperDarkTheme } from '@/util/theme';
+import { Appearance } from 'react-native';
 
 export type AppTheme = typeof PaperLightTheme;
 export const useAppTheme = () => useTheme<AppTheme>();
@@ -12,7 +13,7 @@ export function PaperTheme({ children }: { children: React.ReactNode }) {
   const { config: { theme } } = useConfigStore();
 
   return (
-    <PaperProvider theme={theme === "dark" ? PaperDarkTheme : PaperLightTheme}>
+    <PaperProvider theme={(theme || Appearance.getColorScheme()) === "dark" ? PaperDarkTheme : PaperLightTheme}>
       <PortalProvider>
         {children}
         <Portal>

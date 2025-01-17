@@ -1,6 +1,6 @@
 import styles from '@/styles/style';
 import * as React from 'react';
-import { Appearance, View } from 'react-native';
+import { View } from 'react-native';
 import { Switch, List, SegmentedButtons } from 'react-native-paper';
 import Divider from '@/components/Divider';
 import { RequestType, theme, useConfigStore } from '@/store/useConfig';
@@ -96,7 +96,7 @@ export default () => {
               label: i18n.t("settingsBrightnessDark"),
             },
             {
-              value: Appearance.getColorScheme()!,
+              value: "",
               label: i18n.t("settingsBrightnessSystem"),
             },
           ]}

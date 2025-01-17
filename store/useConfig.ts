@@ -7,8 +7,6 @@ const colorScheme = Appearance.getColorScheme();
 
 const noMarkdownPrompt = "\nYou must not use markdown or any other formatting language in any way!";
 
-console.log(colorScheme);
-
 const DEFAULT_PROMPT = "You are a helpful assistant"
 
 export type RequestType = "stream" | "generate"

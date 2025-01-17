@@ -7,7 +7,7 @@ import FileViewer from 'react-native-file-viewer'
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams } from 'expo-router';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { ActivityIndicator, View, Text, Image, Alert } from 'react-native'
+import { ActivityIndicator, View, Text, Image, Alert, Appearance } from 'react-native'
 
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
@@ -272,7 +272,7 @@ const ChatApp = () => {
           readOnly: !!isSending
         }}
         theme={{
-          ...(theme === "dark" ? ChatDarkTheme : ChatLightTheme),
+          ...((theme||Appearance.getColorScheme()) === "dark" ? ChatDarkTheme : ChatLightTheme),
           icons: {
             sendButtonIcon: () => !isSending ? (
               <IconButton icon={"send-outline"} />
