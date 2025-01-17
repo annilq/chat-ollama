@@ -4,6 +4,7 @@ import { Button } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
 import { useOllamaStore } from '@/store/useOllamaStore';
+import { i18n } from '@/util/l10n/i18n';
 
 const getModelName = (name: string) => name?.split(":")[0]
 
@@ -44,7 +45,7 @@ export const ChatModal = () => {
 	return (
 		<>
 			<Button mode={"text"} onPress={handleMenuPress} icon="chevron-down"	>
-				{selectedModel ? <Text>{getModelName(selectedModel)}</Text> : <Text>Select Model</Text>}
+				{selectedModel ? <Text>{getModelName(selectedModel)}</Text> : <Text>{i18n.t("noSelectedModel")}</Text>}
 			</Button>
 			<Portal>
 				<BottomSheet
@@ -63,7 +64,7 @@ export const ChatModal = () => {
 							</Button>
 						))}
 						<Button icon={"plus"} mode={"outlined"} onPress={() => { }}>
-							add
+							{i18n.t("modelDialogAddModel")}
 						</Button>
 					</BottomSheetView>
 				</BottomSheet>

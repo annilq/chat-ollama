@@ -8,6 +8,7 @@ import { expo } from '../app.json';
 import { AppRegistry } from "react-native";
 import { ChatHeader } from '@/components/ChatHeader';
 import { PaperTheme } from "@/components/PaperTheme";
+import { i18n } from "@/util/l10n/i18n";
 
 
 export default function RootLayout() {
@@ -36,7 +37,7 @@ export default function RootLayout() {
                   drawerLabelStyle: {
                     color: "current"
                   },
-                  title: 'Chat',
+                  title: i18n.t('optionNewChat'),
                   headerShown: true,
                   header: () => <ChatHeader />,
                   drawerIcon: ({ focused, size, color }) => (
@@ -53,7 +54,7 @@ export default function RootLayout() {
                   drawerLabelStyle: {
                     color: "current"
                   },
-                  title: 'Setting',
+                  title: i18n.t('optionSettings'),
                   drawerIcon: ({ focused, size, color }) => (
                     <Ionicons
                       name="settings-outline"

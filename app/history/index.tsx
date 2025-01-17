@@ -5,6 +5,7 @@ import useChatStore, { Chat } from '@/store/useChats';
 import { formatDate } from "@/util/date";
 import { useState, useMemo } from 'react';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { i18n } from '@/util/l10n/i18n';
 
 export default function HistoryPage() {
   const { chats, deleteChat } = useChatStore();
@@ -26,15 +27,16 @@ export default function HistoryPage() {
 
   const handleDelete = (chatId: string) => {
     Alert.alert(
-      "Delete Chat",
-      "Are you sure you want to delete this chat?",
+      i18n.t('deleteDialogTitle'),
+      i18n.t('deleteDialogDescription'),
+
       [
         {
-          text: "Cancel",
+          text: i18n.t('deleteDialogCancel'),
           style: "cancel"
         },
         {
-          text: "Delete",
+          text: i18n.t('deleteDialogDelete'),
           style: "destructive",
           onPress: () => deleteChat(chatId)
         }
@@ -45,7 +47,7 @@ export default function HistoryPage() {
   const handleLongPress = (chat: Chat) => {
     showActionSheetWithOptions(
       {
-        options: ["Copy Title", "Delete", "Cancel"],
+        options: ["Copy Title", i18n.t('deleteDialogDelete'), i18n.t('deleteDialogCancel')],
         destructiveButtonIndex: 1,
         cancelButtonIndex: 2,
       },
@@ -97,7 +99,7 @@ export default function HistoryPage() {
 
         {filteredChats.length === 0 && (
           <View style={styles.emptyState}>
-            <Text>No chats found</Text>
+            <Text>{i18n.t("optionNoChatFound")}</Text>
           </View>
         )}
       </List.Section>

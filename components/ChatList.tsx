@@ -2,8 +2,9 @@ import { router } from 'expo-router';
 import useChatStore, { Chat } from "@/store/useChats";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { DrawerActions } from "@react-navigation/native";
-import { List, Button } from "react-native-paper";
+import { List } from "react-native-paper";
 import { View } from 'react-native';
+import { i18n } from '@/util/l10n/i18n';
 
 const MAX_DRAWER_ITEMS = 1;
 

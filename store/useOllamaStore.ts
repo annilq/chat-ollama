@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import OllamaAPI from '@/util/ollama_api';
 import { useSnackBarStore } from './useSnackbar';
 import { ModelResponse } from "ollama";
+import { i18n } from '@/util/l10n/i18n';
 
 interface OllamaState {
   models: ModelResponse[];
@@ -88,7 +89,7 @@ export const useOllamaStore = create<OllamaState>((set, get) => ({
       await get().refreshModels();
       useSnackBarStore.getState().setSnack({
         visible: true,
-        message: `Successfully pulled model ${modelName}`
+        message: i18n.t("modelDialogAddDownloadSuccess")
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to pull model';

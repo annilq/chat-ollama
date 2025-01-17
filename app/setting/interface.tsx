@@ -1,10 +1,10 @@
 import styles from '@/styles/style';
 import * as React from 'react';
-import { useState } from 'react';
 import { View } from 'react-native';
 import { Switch, List, SegmentedButtons } from 'react-native-paper';
 import Divider from '@/components/Divider';
 import { RequestType, useConfigStore } from '@/store/useConfig';
+import { i18n } from '@/util/l10n/i18n';
 
 export default () => {
   const { config: { showModelTag, showTipsInDrawer, clearChatWhenResetModel, requestType, generateTitles, messageEditable, showConfirmWhenChatDelete, }, setConfig } = useConfigStore()
@@ -13,7 +13,7 @@ export default () => {
     <View style={[styles["px-4"], styles["mt-4"]]} >
       <List.Section>
         <List.Item
-          title="show model tags"
+          title={i18n.t("settingsShowModelTags")}
           right={(props) => <Switch {...props} value={showModelTag} onValueChange={(value) => setConfig({ showModelTag: value })} />}
         />
         {/* <List.Item
@@ -22,7 +22,7 @@ export default () => {
         /> */}
 
         <List.Item
-          title="reset when model change"
+          title={i18n.t("settingsResetOnModelChange")}
           right={(props) => <Switch {...props} value={clearChatWhenResetModel} onValueChange={(value) => setConfig({ clearChatWhenResetModel: value })} />}
         />
 
@@ -35,28 +35,28 @@ export default () => {
             {
               value: 'stream',
               disabled: true,
-              label: 'stream',
+              label: i18n.t("settingsRequestTypeStream"),
             },
             {
               value: 'generate',
-              label: 'generate',
+              label: i18n.t("settingsRequestTypeRequest"),
             },
           ]}
         />
         <List.Item
-          title="generate title"
+          title={i18n.t("settingsGenerateTitles")}
           right={(props) => <Switch {...props} value={generateTitles} onValueChange={(value) => setConfig({ generateTitles: value })} />}
         />
         <List.Item
-          title="enable message editable"
+          title={i18n.t("settingsEnableEditing")}
           right={(props) => <Switch {...props} value={messageEditable} onValueChange={(value) => setConfig({ messageEditable: value })} />}
         />
         <List.Item
-          title="confirm when delete message"
+          title={i18n.t("settingsAskBeforeDelete")}
           right={(props) => <Switch {...props} value={showConfirmWhenChatDelete} onValueChange={(value) => setConfig({ showConfirmWhenChatDelete: value })} />}
         />
         <List.Item
-          title="show tip in sidebar"
+          title={i18n.t("settingsShowTips")}
           right={(props) => <Switch {...props} value={showTipsInDrawer} onValueChange={(value) => setConfig({ showTipsInDrawer: value })} />}
         />
 

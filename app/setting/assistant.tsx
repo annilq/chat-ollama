@@ -2,6 +2,7 @@ import { useConfigStore } from '@/store/useConfig';
 import styles from '@/styles/style';
 import { View } from 'react-native';
 import { TextInput, Switch, List, Divider } from 'react-native-paper';
+import { i18n } from '@/util/l10n/i18n';
 
 export default () => {
   const { config: { useMarkdown, useSystem, systemPrompt }, setConfig } = useConfigStore()
@@ -12,19 +13,19 @@ export default () => {
         mode="outlined"
         multiline
         style={{ height: 100 }}
-        label="behavior"
+        label={i18n.t("settingsSystemMessage")}
         onChangeText={(text) => setConfig({ systemPrompt: text })}
         value={systemPrompt}
         textAlignVertical='top'
       />
       <List.Section>
         <List.Item
-          title="Use system help"
+          title={i18n.t("settingsUseSystem")}
           right={(props) => <Switch {...props} value={useSystem} onValueChange={(useSystem) => setConfig({ useSystem })} />}
         />
         <Divider />
         <List.Item
-          title="disable markDown"
+          title={i18n.t("settingsDisableMarkdown")}
           right={(props) => <Switch {...props} value={useMarkdown} onValueChange={(useMarkdown) => setConfig({ useMarkdown })} />}
         />
       </List.Section>

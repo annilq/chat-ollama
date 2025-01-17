@@ -6,6 +6,7 @@ import { ChatResponse, Message } from 'ollama';
 import { Chat, CommonMessage } from '@/store/useChats';
 import { useOllamaStore } from '@/store/useOllamaStore';
 import { MessageType } from '@flyerhq/react-native-chat-ui';
+import { i18n } from '@/util/l10n/i18n';
 
 let images: string[] = [];
 
@@ -27,7 +28,7 @@ const getHistory = async (addToSystem?: string): Promise<Message[]> => {
     history.push({ role: MessageRole.SYSTEM, content: system });
   }
 
-  const messages = await AsyncStorage.getItem("messages") ?? [];
+  const messages = (await AsyncStorage.getItem("messages") ?? []) as CommonMessage[];
   images = [];
 
   messages.forEach(async (message) => {

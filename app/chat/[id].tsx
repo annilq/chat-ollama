@@ -17,6 +17,7 @@ import { useOllamaStore } from '@/store/useOllamaStore'
 import { CommonMessage, useChatStore } from '@/store/useChats'
 import { IconButton } from 'react-native-paper'
 import { MessageEdit } from '@/components/MessageEdit'
+import { i18n } from '@/util/l10n/i18n'
 
 const renderBubble = ({
   child,
@@ -79,7 +80,7 @@ const ChatApp = () => {
   const handleAttachmentPress = () => {
     showActionSheetWithOptions(
       {
-        options: ['Photo', 'File', 'Cancel'],
+        options: [ i18n.t('takeImage'),  i18n.t('uploadImage'),  i18n.t('cancel')],
         cancelButtonIndex: 2,
       },
       (buttonIndex) => {

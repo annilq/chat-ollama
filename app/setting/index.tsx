@@ -6,6 +6,7 @@ import { List, TextInput } from 'react-native-paper';
 import Divider from '@/components/Divider';
 import { useAppTheme } from '@/components/PaperTheme';
 import { useOllamaStore } from '@/store/useOllamaStore';
+import { i18n } from '@/util/l10n/i18n';
 
 function isValidURLWithFallback(urlstr: string) {
   try {
@@ -67,7 +68,7 @@ const Setting = () => {
         value={text}
         onChangeText={handleTextChange}
         mode="outlined"
-        label="host"
+        label={i18n.t("settingsHost")}
         placeholder="localhost:11434"
         error={!!error}
         disabled={isChecking}
@@ -82,7 +83,6 @@ const Setting = () => {
       {error && (
         <Text style={[getStyles("py-4"), { color: errorColor }]}>
           {error === "invalid_host_format" && "Invalid host format"}
-          {error === "invalid_ip_address" && "Invalid IP address"}
           {error === "ollama_service_unavailable" && "Ollama service is not available"}
           {error === "connection_failed" && "Failed to connect to Ollama service"}
         </Text>
@@ -92,7 +92,7 @@ const Setting = () => {
       <List.Section>
         <List.Item
           style={listItemStyle}
-          title="behavior"
+          title={i18n.t("settingsTitleBehavior")}
           left={() => <List.Icon icon="head-cog" />}
           onPress={() => {
             router.push("/setting/assistant")
@@ -100,23 +100,23 @@ const Setting = () => {
         />
         <List.Item
           style={listItemStyle}
-          title="interface"
+          title={i18n.t("settingsTitleInterface")}
           left={() => <List.Icon icon="card-outline" />}
           onPress={() => {
             router.push("/setting/interface")
           }}
         />
-        <List.Item
+        {/* <List.Item
           style={listItemStyle}
-          title="headphones"
+          title={i18n.t("settingsTitleBehavior")}
           left={() => <List.Icon icon="headphones" />}
           onPress={() => {
             router.push("/setting/export")
           }}
-        />
+        /> */}
         <List.Item
           style={listItemStyle}
-          title="export"
+          title={i18n.t("settingsTitleExport")}
           left={() => <List.Icon icon="share-variant" />}
           onPress={() => {
             router.push("/setting/export")
@@ -124,7 +124,7 @@ const Setting = () => {
         />
         <List.Item
           style={listItemStyle}
-          title="about"
+          title={i18n.t("settingsTitleAbout")}
           left={() => <List.Icon icon="help-circle" />}
           onPress={() => {
             router.push("/setting/about")

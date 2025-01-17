@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useChatStore } from '@/store/useChats'
+import { i18n } from '@/util/l10n/i18n';
 
 
 export const MessageEdit = () => {
@@ -67,7 +68,7 @@ export const MessageEdit = () => {
 						mode="outlined"
 						multiline
 						style={styles.textInput}
-						label="edit message"
+						label={i18n.t("dialogEditMessageTitle")}
 						onChangeText={setInputText}
 						value={inputText}
 						textAlignVertical='top'

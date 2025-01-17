@@ -13,6 +13,7 @@ import { MessageRole } from "@/util/ollama_api";
 import { useSnackBarStore } from "./useSnackbar";
 import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitleAi } from "@/util/util";
 import { useConfigStore } from "./useConfig";
+import { i18n } from '@/util/l10n/i18n';
 
 const CHAT_STORAGE_KEY = '@ollama_chat_history';
 
@@ -164,7 +165,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     if (!model) {
       useSnackBarStore.getState().setSnack({
         visible: true,
-        message: "please pick a model to chat"
+        message: i18n.t("noModelSelected")
       });
       return
     }
