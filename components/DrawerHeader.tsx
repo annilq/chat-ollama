@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { useAppTheme } from './ThemeProvider';
+import SVGImg from "@/assets/logo.svg";
 
 function DrawerHeader() {
+  const { colors: { onBackground, onPrimary } } = useAppTheme()
+
   return (
     <View style={styles.header}>
-      <Image
-        source={require('../assets/images/logo.png')} 
-        style={styles.image}
-      />
-      <Text>Ollama</Text>
+      <SVGImg width={23} height={30} fill={onBackground} />
+      <Text style={{ color: onBackground }}>Ollama</Text>
     </View>
   );
 }
@@ -20,11 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     alignItems: "center"
-  },
-  image: {
-    height: 30,
-    width: 23,
-  },
+  }
 });
 
 export default DrawerHeader;

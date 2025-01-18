@@ -4,11 +4,13 @@ import { Button, TextInput } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useChatStore } from '@/store/useChats'
 import { i18n } from '@/util/l10n/i18n';
+import { useAppTheme } from './ThemeProvider';
 
 
 export const MessageEdit = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const snapPoints = useMemo(() => ['40%'], []);
+	const { colors: { surface, } } = useAppTheme()
 
 	const { updateMessage, editMessageId, chat } = useChatStore()
 
@@ -39,7 +41,7 @@ export const MessageEdit = () => {
 	);
 
 	const handleUpdateMessage = () => {
-		
+
 		if (editMessageId && inputText) {
 			updateMessage(editMessageId, inputText);
 			setInputText("");
@@ -53,7 +55,6 @@ export const MessageEdit = () => {
 	};
 	return (
 		<>
-			{/* <Portal> */}
 			<BottomSheet
 				ref={bottomSheetRef}
 				index={-1}
@@ -62,6 +63,7 @@ export const MessageEdit = () => {
 				onChange={handleSheetChange}
 				enablePanDownToClose
 				handleStyle={styles.handleStyle}
+				backgroundStyle={{ backgroundColor: surface }}
 			>
 				<BottomSheetView style={styles.bottomSheetContent}>
 					<TextInput
@@ -78,7 +80,6 @@ export const MessageEdit = () => {
 					</Button>
 				</BottomSheetView>
 			</BottomSheet>
-			{/* </Portal> */}
 		</>
 	);
 };
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
 	},
 
 	handleStyle: {
-		backgroundColor: '#fff',
 		borderTopLeftRadius: 15,
 		borderTopRightRadius: 15,
 	},

@@ -110,16 +110,13 @@ export default function HistoryPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   searchBar: {
     margin: 16,
     elevation: 0,
-    backgroundColor: '#f5f5f5',
   },
   date: {
     fontSize: 12,
-    color: '#666',
     alignSelf: 'center',
     marginRight: 8,
   },

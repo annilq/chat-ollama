@@ -1,19 +1,11 @@
 import { Stack } from 'expo-router';
 import { MenuIcon } from '@/components/MenuIcon';
-import { useAppTheme } from '@/components/PaperTheme';
 import { i18n } from '@/util/l10n/i18n';
 
 export default function SettingLayout() {
-  const {
-    colors: { background },
-  } = useAppTheme();
 
   return (
-    <Stack
-      screenOptions={{
-        contentStyle: { backgroundColor: background }
-      }}
-    >
+    <Stack>
       <Stack.Screen
         name="index"
         options={{

@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { MenuIcon } from '@/components/MenuIcon';
-import { useAppTheme } from '@/components/PaperTheme';
+import { useAppTheme } from '@/components/ThemeProvider';
 
 export default function SettingLayout() {
   const {
@@ -8,11 +8,7 @@ export default function SettingLayout() {
   } = useAppTheme();
 
   return (
-    <Stack
-      screenOptions={{
-        contentStyle: { backgroundColor: background }
-      }}
-    >
+    <Stack>
       <Stack.Screen
         name="index"
         options={{

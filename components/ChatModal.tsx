@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
 import { useOllamaStore } from '@/store/useOllamaStore';
 import { i18n } from '@/util/l10n/i18n';
+import { useAppTheme } from './ThemeProvider';
 
 const getModelName = (name: string) => name?.split(":")[0]
 
@@ -12,7 +13,7 @@ export const ChatModal = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
 	const { models, selectedModel, setSelectedModel, refreshModels } = useOllamaStore()
 	const snapPoints = useMemo(() => ['25%'], []);
-
+	const { colors: { surface, } } = useAppTheme()
 	const handleMenuPress = useCallback(() => {
 		refreshModels()
 
@@ -56,6 +57,7 @@ export const ChatModal = () => {
 					backdropComponent={renderBackdrop}
 					enablePanDownToClose
 					handleStyle={styles.handleStyle}
+					backgroundStyle={{ backgroundColor: surface }}
 				>
 					<BottomSheetView style={styles.bottomSheetContent}>
 						{models.map(model => (
@@ -84,10 +86,8 @@ const styles = StyleSheet.create({
 	menuItem: {
 		paddingVertical: 16,
 		borderBottomWidth: 1,
-		borderBottomColor: '#e0e0e0',
 	},
 	handleStyle: {
-		backgroundColor: '#fff',
 		borderTopLeftRadius: 15,
 		borderTopRightRadius: 15,
 	},

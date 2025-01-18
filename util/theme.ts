@@ -1,8 +1,8 @@
 import { defaultTheme } from "@flyerhq/react-native-chat-ui";
-import { DefaultTheme, MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
 
-// 
-const colors = {
+
+export const colors = {
   light: {
     background: "#FFFFFF",
     surface: "#FFFFFF",
@@ -14,7 +14,7 @@ const colors = {
     inputBackground: "#F5F5F5",
   },
   dark: {
-    background: "#1E1E1E",
+    background: MD3DarkTheme.colors.background,
     surface: "#2C2C2C",
     primary: "#FFFFFF",
     secondary: "#E0E0E0",
@@ -48,7 +48,6 @@ export const PaperLightTheme = {
   },
   fonts: {
     ...MD3LightTheme.fonts,
-    // 可以在这里自定义字体设置
   },
 };
 

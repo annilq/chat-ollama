@@ -4,7 +4,7 @@ import * as React from 'react';
 import { StyleProp, View, Text } from 'react-native';
 import { List, TextInput } from 'react-native-paper';
 import Divider from '@/components/Divider';
-import { useAppTheme } from '@/components/PaperTheme';
+import { useAppTheme } from '@/components/ThemeProvider';
 import { useOllamaStore } from '@/store/useOllamaStore';
 import { i18n } from '@/util/l10n/i18n';
 
