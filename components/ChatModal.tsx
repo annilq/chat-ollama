@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -6,14 +6,27 @@ import { Portal } from '@gorhom/portal';
 import { useOllamaStore } from '@/store/useOllamaStore';
 import { i18n } from '@/util/l10n/i18n';
 import { useAppTheme } from './ThemeProvider';
+import { useConfigStore } from '@/store/useConfig';
+import useChatStore from '@/store/useChats';
 
 const getModelName = (name: string) => name?.split(":")[0]
 
 export const ChatModal = () => {
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const { models, selectedModel, setSelectedModel, refreshModels } = useOllamaStore()
 	const snapPoints = useMemo(() => ['25%'], []);
 	const { colors: { surface, } } = useAppTheme()
+
+	const { models, refreshModels } = useOllamaStore()
+	const { setModel, chat } = useChatStore()
+	const { config: { showModelTag } } = useConfigStore()
+	const [currentModel, setCurrentModel] = useState(chat?.model)
+
+	useEffect(() => {
+		if (chat?.model) {
+			setCurrentModel(chat.model)
+		}
+	}, [chat?.model])
+
 	const handleMenuPress = useCallback(() => {
 		refreshModels()
 
@@ -34,19 +47,20 @@ export const ChatModal = () => {
 		[]
 	);
 
-	const handleSheetChange = useCallback((index: number) => {
-		console.log('bottomSheet index changed:', index);
-	}, []);
+	const handleSheetChange = (index: number) => {
+		if (index === -1) {
+			setModel(currentModel!)
+		}
+	};
 
 	const handleMenuItemPress = useCallback((modelName: string) => {
-		// bottomSheetRef.current?.close();
-		setSelectedModel(modelName)
+		setCurrentModel(modelName)
 	}, []);
 
 	return (
 		<>
 			<Button mode={"text"} onPress={handleMenuPress} icon="chevron-down"	>
-				{selectedModel ? <Text>{getModelName(selectedModel)}</Text> : <Text>{i18n.t("noSelectedModel")}</Text>}
+				{chat?.model ? <Text>{showModelTag ? chat?.model : getModelName(chat?.model)}</Text> : <Text>{i18n.t("noSelectedModel")}</Text>}
 			</Button>
 			<Portal>
 				<BottomSheet
@@ -61,8 +75,8 @@ export const ChatModal = () => {
 				>
 					<BottomSheetView style={styles.bottomSheetContent}>
 						{models.map(model => (
-							<Button key={model.name} icon={selectedModel === model.name ? "check" : undefined} mode={selectedModel === model.name ? "contained" : "outlined"} onPress={() => handleMenuItemPress(model.name)}>
-								{getModelName(model.name)}
+							<Button key={model.name} icon={currentModel === model.name ? "check" : undefined} mode={currentModel === model.name ? "contained" : "outlined"} onPress={() => handleMenuItemPress(model.name)}>
+								{showModelTag ? model.name : getModelName(model.name)}
 							</Button>
 						))}
 						<Button icon={"plus"} mode={"outlined"} onPress={() => { }}>

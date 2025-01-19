@@ -3,17 +3,16 @@ import OllamaAPI from '@/util/ollama_api';
 import { useSnackBarStore } from './useSnackbar';
 import { ModelResponse } from "ollama";
 import { i18n } from '@/util/l10n/i18n';
+import { useConfigStore } from './useConfig';
 
 interface OllamaState {
   models: ModelResponse[];
-  selectedModel: string | null;
   isLoading: boolean;
   error: Error | null;
   isServiceAvailable: boolean;
   ollama: OllamaAPI;
 
   // Actions
-  setSelectedModel: (modelName: string) => void;
   refreshModels: () => Promise<void>;
   pullModel: (modelName: string) => Promise<void>;
   deleteModel: (modelName: string) => Promise<void>;
@@ -24,7 +23,6 @@ interface OllamaState {
 
 export const useOllamaStore = create<OllamaState>((set, get) => ({
   models: [],
-  selectedModel: null,
   isLoading: true,
   error: null,
   isServiceAvailable: false,
@@ -35,10 +33,6 @@ export const useOllamaStore = create<OllamaState>((set, get) => ({
     set({ ollama });
     get().checkService();
     get().refreshModels();
-  },
-
-  setSelectedModel: (modelName) => {
-    set({ selectedModel: modelName });
   },
 
   checkService: async () => {
@@ -67,7 +61,6 @@ export const useOllamaStore = create<OllamaState>((set, get) => ({
       set((state) => ({
         models: response.models,
         isLoading: false,
-        selectedModel: state.selectedModel || response.models[0]?.name || null
       }));
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -108,9 +101,6 @@ export const useOllamaStore = create<OllamaState>((set, get) => ({
     try {
       set({ isLoading: true, error: null });
       await get().ollama.deleteModel(modelName);
-      set((state) => ({
-        selectedModel: state.selectedModel === modelName ? null : state.selectedModel
-      }));
       await get().refreshModels();
       useSnackBarStore.getState().setSnack({
         visible: true,

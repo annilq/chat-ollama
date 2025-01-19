@@ -1,11 +1,11 @@
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import { Chat, MessageType, defaultTheme } from '@flyerhq/react-native-chat-ui'
 import { PreviewData } from '@flyerhq/react-native-link-preview'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect } from 'react'
 import DocumentPicker from 'react-native-document-picker'
 import FileViewer from 'react-native-file-viewer'
 import * as ImagePicker from 'expo-image-picker';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { ActivityIndicator, View, Text, Image, Alert, Appearance } from 'react-native'
 
@@ -20,6 +20,7 @@ import { MessageEdit } from '@/components/MessageEdit'
 import { i18n } from '@/util/l10n/i18n'
 import { useConfigStore } from '@/store/useConfig'
 import { ChatDarkTheme, ChatLightTheme } from '@/util/theme'
+import { MessageRole } from '@/util/ollama_api'
 
 const renderBubble = ({
   child,
@@ -73,12 +74,12 @@ const ChatApp = () => {
   const { sendMessage, chat, isSending, initializeChats, getChat, deleteMessage, showMessageInput } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
   const { config: { theme } } = useConfigStore();
-
+  const navigation = useNavigation()
   // we set a constant userId 
   // when we persist chat we can know which message is user
   const user = { id: "user" }
 
-  const messages = chat?.messages || []
+  const messages = chat?.messages?.filter(message => message.role != MessageRole.SYSTEM) || []
 
   const handleAttachmentPress = () => {
     showActionSheetWithOptions(
@@ -212,6 +213,12 @@ const ChatApp = () => {
     getChat(id === 'new' ? undefined : id)
   }, [id])
 
+  useEffect(() => {
+    if (chat?.title) {
+      navigation.setOptions({ title: chat?.title })
+    }
+  }, [chat])
+
   const handleDelete = (messageId: string) => {
     Alert.alert(
       "Delete Message",
@@ -272,7 +279,7 @@ const ChatApp = () => {
           readOnly: !!isSending
         }}
         theme={{
-          ...((theme||Appearance.getColorScheme()) === "dark" ? ChatDarkTheme : ChatLightTheme),
+          ...((theme || Appearance.getColorScheme()) === "dark" ? ChatDarkTheme : ChatLightTheme),
           icons: {
             sendButtonIcon: () => !isSending ? (
               <IconButton icon={"send-outline"} />

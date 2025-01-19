@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { MessageRole } from './ollama_api';
 import { ChatResponse, Message } from 'ollama';
-import { Chat, CommonMessage } from '@/store/useChats';
+import useChatStore, { Chat, CommonMessage } from '@/store/useChats';
 import { useOllamaStore } from '@/store/useOllamaStore';
 import { MessageType } from '@flyerhq/react-native-chat-ui';
 import { i18n } from '@/util/l10n/i18n';
@@ -83,7 +83,7 @@ const getHistoryString = async (uuid: string): Promise<any[]> => {
 async function getTitleAi(messages: CommonMessage[]): Promise<string> {
   try {
     // Mocking the API call using axios (Replace with your actual endpoint and payload)
-    const model = useOllamaStore.getState().selectedModel!
+    const model = useChatStore.getState().chat?.model!
     const generatedResponse = await useOllamaStore.getState().ollama.chat({
       model,
       stream: false,

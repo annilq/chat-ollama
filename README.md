@@ -1,8 +1,5 @@
 ### plan to do
-1. when user select a file or a photo 
-   1. send it to ollama with default prompt(user can config)
-   2. send it next time with the text message(if ollam can remember the context ,this step is no need)
-   3. if ollama understand the file ,do not send the file every time,just send the content
+1. history chat header setting
 
 ### Thanks to below Apps
 

@@ -5,7 +5,7 @@ import { Appearance } from 'react-native';
 
 const colorScheme = Appearance.getColorScheme();
 
-const noMarkdownPrompt = "\nYou must not use markdown or any other formatting language in any way!";
+export const noMarkdownPrompt = "\nYou must not use markdown or any other formatting language in any way!";
 
 const DEFAULT_PROMPT = "You are a helpful assistant"
 
@@ -16,7 +16,7 @@ interface Config {
   // setting page config
   systemPrompt: string
   useSystem: boolean
-  useMarkdown: boolean
+  noMarkdown: boolean
   // chat config
   generateTitles: boolean
   requestType: RequestType // react native fetch doesn't support stream
@@ -43,7 +43,7 @@ export const useConfigStore = create(
       config: {
         useSystem: false,
         systemPrompt: DEFAULT_PROMPT,
-        useMarkdown: false,
+        noMarkdown: false,
 
         generateTitles: true,
         requestType: "generate",

@@ -1,7 +1,6 @@
 import { defaultTheme } from "@flyerhq/react-native-chat-ui";
 import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
 
-
 export const colors = {
   light: {
     background: "#FFFFFF",
@@ -30,21 +29,11 @@ export const PaperLightTheme = {
   ...MD3LightTheme,
   colors: {
     ...MD3LightTheme.colors,
-    background: colors.light.background,
-    surface: colors.light.surface,
     primary: colors.light.primary,
     secondary: colors.light.secondary,
     onSurface: colors.light.text,
     onBackground: colors.light.text,
     outline: colors.light.outline,
-    elevation: {
-      level0: "transparent",
-      level1: colors.light.surface,
-      level2: colors.light.surface,
-      level3: colors.light.surface,
-      level4: colors.light.surface,
-      level5: colors.light.surface,
-    },
   },
   fonts: {
     ...MD3LightTheme.fonts,
@@ -55,21 +44,11 @@ export const PaperDarkTheme = {
   ...MD3DarkTheme,
   colors: {
     ...MD3DarkTheme.colors,
-    background: colors.dark.background,
-    surface: colors.dark.surface,
     primary: colors.dark.primary,
     secondary: colors.dark.secondary,
     onSurface: colors.dark.text,
     onBackground: colors.dark.text,
     outline: colors.dark.outline,
-    elevation: {
-      level0: "transparent",
-      level1: colors.dark.surface,
-      level2: colors.dark.surface,
-      level3: colors.dark.surface,
-      level4: colors.dark.surface,
-      level5: colors.dark.surface,
-    },
   },
   fonts: {
     ...MD3DarkTheme.fonts,

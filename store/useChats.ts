@@ -12,7 +12,7 @@ import { MessageType } from "@flyerhq/react-native-chat-ui";
 import { MessageRole } from "@/util/ollama_api";
 import { useSnackBarStore } from "./useSnackbar";
 import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitleAi } from "@/util/util";
-import { useConfigStore } from "./useConfig";
+import { noMarkdownPrompt, useConfigStore } from "./useConfig";
 import { i18n } from '@/util/l10n/i18n';
 
 const CHAT_STORAGE_KEY = '@ollama_chat_history';
@@ -35,8 +35,8 @@ export interface Chat {
 export interface ChatState {
   chats: Chat[];
   chat?: Chat;
+  setModel: (modelName: string) => void;
   editMessageId: string | false
-  useSystem?: Boolean;
   isSending: boolean;
   error: string | null;
   initializeChats: () => Promise<void>;
@@ -53,7 +53,6 @@ export interface ChatState {
 
 export const useChatStore = create<ChatState>((set, get) => ({
   chats: [] as Chat[],
-  useSystem: false,
   chat: undefined,
   messages: [],
   editMessageId: false,
@@ -66,14 +65,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({ chats: JSON.parse(history) as Chat[] });
     }
   },
-
+  setModel: (modelName) => {
+    const clearChatWhenResetModel = useConfigStore.getState().config.clearChatWhenResetModel
+    const chat = get().chat
+    if (modelName === chat?.model) {
+      return
+    }
+    if (clearChatWhenResetModel) {
+      set({ chat: { ...chat, model: modelName, messages: [] } });
+    } else {
+      set({ chat: { ...chat, model: modelName } });
+    }
+  },
   getChat: async (chatId?: string) => {
     try {
       const chats: Chat[] = get().chats
       const chat = chats.find(chat => chat.id === chatId)
       if (chat) {
-        set({ chat: { ...chat, messages: chat.messages.filter(message => message.role != MessageRole.SYSTEM) || [] } });
-        useOllamaStore.getState().setSelectedModel(chat.model)
+        set({ chat });
       } else {
         set({ chat: undefined });
       }
@@ -161,7 +170,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
 
   sendMessage: async (message: MessageType.Any) => {
-    const model = useOllamaStore.getState().selectedModel!
+    const model = get().chat?.model
     if (!model) {
       useSnackBarStore.getState().setSnack({
         visible: true,
@@ -170,10 +179,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return
     }
 
-    if (!get().chat) {
+    if (get().chat?.messages?.length === 0) {
+      const { config } = useConfigStore.getState()
+      let systemPrompt = config.systemPrompt
+      if (config.noMarkdown) {
+        systemPrompt = systemPrompt + noMarkdownPrompt
+      }
       set({
         chat: {
-          messages: get().useSystem ? [{ role: MessageRole.SYSTEM, text: "", id: uuidv4(), type: "text", author: { id: MessageRole.SYSTEM } }] : [],
+          // Todo do show system message  
+          messages: config.useSystem ? [{ role: MessageRole.SYSTEM, text: systemPrompt, id: uuidv4(), type: "text", author: { id: MessageRole.SYSTEM } }] : [],
           title: "",
           model,
           createdAt: new Date,

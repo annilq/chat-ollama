@@ -5,7 +5,7 @@ import { TextInput, Switch, List, Divider } from 'react-native-paper';
 import { i18n } from '@/util/l10n/i18n';
 
 export default () => {
-  const { config: { useMarkdown, useSystem, systemPrompt }, setConfig } = useConfigStore()
+  const { config: { noMarkdown, useSystem, systemPrompt }, setConfig } = useConfigStore()
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
@@ -26,7 +26,7 @@ export default () => {
         <Divider />
         <List.Item
           title={i18n.t("settingsDisableMarkdown")}
-          right={(props) => <Switch {...props} value={useMarkdown} onValueChange={(useMarkdown) => setConfig({ useMarkdown })} />}
+          right={(props) => <Switch {...props} value={noMarkdown} onValueChange={(noMarkdown) => setConfig({ noMarkdown })} />}
         />
       </List.Section>
     </View>
