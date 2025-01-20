@@ -651,6 +651,11 @@
         "description": "Text displayed when chats are exported successfully",
         "context": "Visible in the settings view"
     },
+    "settingsExportChatsFailed": "Chats exported failed",
+    "@settingsExportChatsFailed": {
+        "description": "Text displayed when chats are exported failed",
+        "context": "Visible in the settings view"
+    },
     "settingsImportChats": "Import chats",
     "@settingsImportChats": {
         "description": "Text displayed as description for import chats button",
@@ -679,6 +684,11 @@
     "settingsImportChatsSuccess": "Chats imported successfully",
     "@settingsImportChatsSuccess": {
         "description": "Text displayed when chats are imported successfully",
+        "context": "Visible in the settings view"
+    },
+    "settingsImportChatsFailed": "Chats imported Failed",
+    "@settingsImportChatsFailed": {
+        "description": "Text displayed when chats are imported Failed",
         "context": "Visible in the settings view"
     },
     "settingsExportInfo": "This options allows you to export and import your chat history. This can be useful if you want to transfer your chat history to another device or backup your chat history",

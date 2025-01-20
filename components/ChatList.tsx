@@ -31,8 +31,8 @@ export function ChatList(props: DrawerContentComponentProps) {
 
       {chats.length > 0 ? (
         <List.Item
-          title={i18n.t("optionNoChatFound")}
-          right={props => <List.Icon {...props} icon="history" />}
+          title={"show all chats"}
+          right={props => <List.Icon {...props} icon="chevron-right" />}
           onPress={() => {
             router.push('/history');
             props.navigation.dispatch(DrawerActions.closeDrawer());

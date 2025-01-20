@@ -48,7 +48,7 @@ export const ChatModal = () => {
 	);
 
 	const handleSheetChange = (index: number) => {
-		if (index === -1) {
+		if (index === -1 && currentModel !== chat?.model) {
 			setModel(currentModel!)
 		}
 	};

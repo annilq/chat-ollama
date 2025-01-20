@@ -153,7 +153,8 @@ const createBorderUtils = () => {
 // Generate flexbox utilities
 const createFlexboxUtils = () => {
   return {
-    'flex': { flex: 1 },
+    'flex': { display: "flex" },
+    'flex-1': { flex: 1 },
     'flex-row': { flexDirection: 'row' },
     'flex-col': { flexDirection: 'column' },
     'flex-wrap': { flexWrap: 'wrap' },

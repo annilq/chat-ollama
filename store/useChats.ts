@@ -15,7 +15,7 @@ import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitl
 import { noMarkdownPrompt, useConfigStore } from "./useConfig";
 import { i18n } from '@/util/l10n/i18n';
 
-const CHAT_STORAGE_KEY = '@ollama_chat_history';
+export const CHAT_STORAGE_KEY = '@ollama_chat_history';
 
 interface Metadata {
   text: string
@@ -47,7 +47,7 @@ export interface ChatState {
   updateMessage: (messageId: string, message: string) => Promise<void>;
   getChat: (chatId?: string) => Promise<void>;
   saveCurrentChat: () => Promise<void>;
-  sendMessage: (message: MessageType.Any) => void;
+  sendMessage: (message: CommonMessage) => void;
   clearError: () => void;
 }
 
@@ -67,10 +67,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
   setModel: (modelName) => {
     const clearChatWhenResetModel = useConfigStore.getState().config.clearChatWhenResetModel
-    const chat = get().chat
-    if (modelName === chat?.model) {
-      return
-    }
+    const chat = get().chat!
     if (clearChatWhenResetModel) {
       set({ chat: { ...chat, model: modelName, messages: [] } });
     } else {
@@ -169,7 +166,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
-  sendMessage: async (message: MessageType.Any) => {
+  sendMessage: async (message: CommonMessage) => {
     const model = get().chat?.model
     if (!model) {
       useSnackBarStore.getState().setSnack({
@@ -179,7 +176,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return
     }
 
-    if (get().chat?.messages?.length === 0) {
+    if (!get().chat?.messages) {
       const { config } = useConfigStore.getState()
       let systemPrompt = config.systemPrompt
       if (config.noMarkdown) {
@@ -189,6 +186,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         chat: {
           // Todo do show system message  
           messages: config.useSystem ? [{ role: MessageRole.SYSTEM, text: systemPrompt, id: uuidv4(), type: "text", author: { id: MessageRole.SYSTEM } }] : [],
+          userId: message.author.id,
           title: "",
           model,
           createdAt: new Date,
@@ -244,6 +242,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         if (config.generateTitles) {
           const title = await getTitleAi(get().chat!.messages)
           set({ chat: { ...get().chat!, title } });
+        } else {
+          // use the first message for title
+          const firstUserMessage = chat!.messages.find(message => message.role === MessageRole.USER)!
+          set({ chat: { ...get().chat!, title: firstUserMessage.type == "text" ? firstUserMessage.text : firstUserMessage.metadata?.text! } });
         }
         get().saveCurrentChat()
       }

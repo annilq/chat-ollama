@@ -22,7 +22,7 @@ export const Tips = () => {
         fontSize: 12,
         color: colors.secondary,
       }}
-      title={tips[selectedTipIndex]}
+      title={`${i18n.t("tipPrefix")}${tips[selectedTipIndex]}`}
       rippleColor={"transparent"}
       left={props => <List.Icon {...props} icon="lightbulb-on-outline" />}
       onPress={() => {
