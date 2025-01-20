@@ -6,7 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatModal } from './ChatModal';
 import { useOllamaStore } from '@/store/useOllamaStore';
 
-export const ChatHeader = () => {
+export const ChatHeader = (props: { leftIcon?: "menu" | "back" }) => {
+  const { leftIcon = "menu" } = props
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { refreshModels } = useOllamaStore()
@@ -14,11 +15,18 @@ export const ChatHeader = () => {
     <>
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.toolbar}>
-          <IconButton
-            icon="menu"
-            size={24}
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-          />
+          {leftIcon === "menu" ? (
+            <IconButton
+              icon="menu"
+              size={24}
+              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+            />) : (
+            <IconButton
+              icon="chevron-left"
+              size={24}
+              onPress={() => navigation.goBack()}
+            />)
+          }
           <ChatModal />
           <IconButton
             icon="refresh"

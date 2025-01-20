@@ -706,7 +706,7 @@
         "description": "Text displayed when the app is up to date",
         "context": "Visible in the settings view"
     },
-    "settingsUpdateAvailable": "Update available (v{version})",
+    "settingsUpdateAvailable": "Update available (%{version})",
     "@settingsUpdateAvailable": {
         "description": "Text displayed when an update is available",
         "context": "Visible in the settings view",
@@ -772,7 +772,7 @@
         "description": "Text displayed as description for licenses button",
         "context": "Visible in the settings view"
     },
-    "settingsVersion": "Ollama App v{version}",
+    "settingsVersion": "Ollama App %{version}",
     "@settingsVersion": {
         "description": "Text displayed as description for version",
         "context": "Visible in the settings view",

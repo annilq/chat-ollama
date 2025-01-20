@@ -5,11 +5,15 @@ import { DrawerActions } from "@react-navigation/native";
 import { List } from "react-native-paper";
 import { View } from 'react-native';
 import { i18n } from '@/util/l10n/i18n';
+import { useConfigStore } from '@/store/useConfig';
+import { useAppTheme } from './ThemeProvider';
 
 const MAX_DRAWER_ITEMS = 5;
 
 export function ChatList(props: DrawerContentComponentProps) {
   const { chats } = useChatStore();
+  const { colors } = useAppTheme();
+
   const displayChats = chats.slice(0, MAX_DRAWER_ITEMS);
 
   return (
@@ -25,16 +29,28 @@ export function ChatList(props: DrawerContentComponentProps) {
         />
       ))}
 
-      {chats.length>0 ? (
+      {chats.length > 0 ? (
         <List.Item
-          title="View All Chats"
-          left={props => <List.Icon {...props} icon="history" />}
+          title={i18n.t("optionNoChatFound")}
+          right={props => <List.Icon {...props} icon="history" />}
           onPress={() => {
             router.push('/history');
             props.navigation.dispatch(DrawerActions.closeDrawer());
           }}
         />
-      ) : false}
+      ) : (
+        <List.Item
+          title={i18n.t("optionNoChatFound")}
+          titleStyle={{
+            color: colors.secondary,
+          }}
+          left={props => <List.Icon {...props} icon="help" />}
+          onPress={() => {
+            router.push('/history');
+            props.navigation.dispatch(DrawerActions.closeDrawer());
+          }}
+        />
+      )}
     </View>
   );
 }

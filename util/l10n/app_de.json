@@ -134,7 +134,7 @@
   "settingsUpdateCheck": "Nach Updates suchen",
   "settingsUpdateChecking": "Suchen nach Updates ...",
   "settingsUpdateLatest": "Du verwendest die neueste Version",
-  "settingsUpdateAvailable": "Update verfügbar (v{version})",
+  "settingsUpdateAvailable": "Update verfügbar (%{version})",
   "settingsUpdateRateLimit": "Kann nicht überprüfen, API-Limit",
   "settingsUpdateIssue": "Ein Problem ist aufgetreten",
   "settingsUpdateDialogTitle": "Neue Version verfügbar",
@@ -146,5 +146,5 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "Einen Fehler melden",
   "settingsLicenses": "Lizenzen",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App %{version}"
 }

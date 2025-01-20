@@ -4,7 +4,7 @@ import { useAppTheme } from './ThemeProvider';
 import SVGImg from "@/assets/logo.svg";
 
 function DrawerHeader() {
-  const { colors: { onBackground, onPrimary } } = useAppTheme()
+  const { colors: { onBackground } } = useAppTheme()
 
   return (
     <View style={styles.header}>

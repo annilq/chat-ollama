@@ -134,7 +134,7 @@
   "settingsUpdateCheck": "检查更新",
   "settingsUpdateChecking": "检查更新中...",
   "settingsUpdateLatest": "当前为最新版本",
-  "settingsUpdateAvailable": "有可用更新 (v{version})",
+  "settingsUpdateAvailable": "有可用更新 (%{version})",
   "settingsUpdateRateLimit": "无法检查，API使用已超过速率限制",
   "settingsUpdateIssue": "更新服务出错",
   "settingsUpdateDialogTitle": "有可用的新版本",
@@ -146,5 +146,5 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "问题反馈",
   "settingsLicenses": "开源许可证",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App %{version}"
 }

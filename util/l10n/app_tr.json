@@ -134,7 +134,7 @@
   "settingsUpdateCheck": "Güncellemeleri kontrol et",
   "settingsUpdateChecking": "Güncellemeler kontrol ediliyor ...",
   "settingsUpdateLatest": "En son sürümü kullanıyorsunuz",
-  "settingsUpdateAvailable": "Güncelleme mevcut (v{version})",
+  "settingsUpdateAvailable": "Güncelleme mevcut (%{version})",
   "settingsUpdateRateLimit": "Kontrol edilemiyor, API hız sınırı aşıldı",
   "settingsUpdateIssue": "Bir sorun oluştu",
   "settingsUpdateDialogTitle": "Yeni sürüm mevcut",
@@ -146,5 +146,5 @@
   "settingsGithub": "GitHub",
   "settingsReportIssue": "Sorun Bildir",
   "settingsLicenses": "Lisanslar",
-  "settingsVersion": "Ollama App v{version}"
+  "settingsVersion": "Ollama App %{version}"
 }

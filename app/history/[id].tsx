@@ -1,7 +1,13 @@
 // app/index.tsx
 
+import { ChatHeader } from "@/components/ChatHeader";
 import ChatApp from "../chat/[id]";
 
 export default function Index() {
-  return <ChatApp />
+  return (
+    <>
+      <ChatHeader leftIcon="back" />
+      <ChatApp />
+    </>
+  )
 }

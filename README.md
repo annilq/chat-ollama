@@ -1,5 +1,5 @@
 ### plan to do
-1. history chat header setting
+1. markdown render
 
 ### Thanks to below Apps
 

@@ -1,20 +1,23 @@
-import styles from '@/styles/style';
 import * as React from 'react';
 import { Linking, View } from 'react-native';
 import { List } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as Application from 'expo-application';
+
+import styles from '@/styles/style';
 import Divider from '@/components/Divider';
+import SVGImg from "@/assets/logo.svg";
+import { useAppTheme } from '@/components/ThemeProvider';
+import { i18n } from '@/util/l10n/i18n';
 
 export default () => {
+  const { colors: { onBackground } } = useAppTheme()
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
       <List.Section>
         <List.Item
-          title="Ollama App"
-          left={() => <Icon name="verified" size={24} />}
-          onPress={() => {
-          }}
+          title={i18n.t("settingsVersion", { version: Application.nativeApplicationVersion })}
+          left={() => <SVGImg width={23} height={30} fill={onBackground} />}
         />
         <Divider />
         <List.Item
