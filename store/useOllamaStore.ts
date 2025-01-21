@@ -3,7 +3,6 @@ import OllamaAPI from '@/util/ollama_api';
 import { useSnackBarStore } from './useSnackbar';
 import { ModelResponse } from "ollama";
 import { i18n } from '@/util/l10n/i18n';
-import { useConfigStore } from './useConfig';
 
 interface OllamaState {
   models: ModelResponse[];
@@ -104,7 +103,7 @@ export const useOllamaStore = create<OllamaState>((set, get) => ({
       await get().refreshModels();
       useSnackBarStore.getState().setSnack({
         visible: true,
-        message: `Successfully deleted model ${modelName}`
+        message: i18n.t("modelDialogDeleteSuccess")
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to delete model';

@@ -5,7 +5,6 @@ import { DrawerActions } from "@react-navigation/native";
 import { List } from "react-native-paper";
 import { View } from 'react-native';
 import { i18n } from '@/util/l10n/i18n';
-import { useConfigStore } from '@/store/useConfig';
 import { useAppTheme } from './ThemeProvider';
 
 const MAX_DRAWER_ITEMS = 5;
@@ -31,7 +30,7 @@ export function ChatList(props: DrawerContentComponentProps) {
 
       {chats.length > 0 ? (
         <List.Item
-          title={"show all chats"}
+          title={i18n.t("chats")}
           right={props => <List.Icon {...props} icon="chevron-right" />}
           onPress={() => {
             router.push('/history');
@@ -58,7 +57,7 @@ export function ChatList(props: DrawerContentComponentProps) {
 function ChatItem(props: { data: Chat, onPress: () => void }) {
   const { data, onPress } = props;
   const lastMessage = data.messages[data.messages.length - 1];
-  const defaultTitle = lastMessage?.text || 'New Chat';
+  const defaultTitle = lastMessage?.text || lastMessage?.metadata?.text;
 
   return (
     <List.Item

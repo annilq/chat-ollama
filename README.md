@@ -1,6 +1,9 @@
 ### plan to do
-1. markdown render
-2. add model
+1. add model
+
+### i18n
+tip5 longpress
+tip1 double tap to
 
 ### Thanks to below Apps
 

@@ -7,7 +7,7 @@ import FileViewer from 'react-native-file-viewer'
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { ActivityIndicator, View, Text, Image, Alert, Appearance } from 'react-native'
+import { ActivityIndicator, View, Image, Alert, Appearance } from 'react-native'
 
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +21,8 @@ import { i18n } from '@/util/l10n/i18n'
 import { useConfigStore } from '@/store/useConfig'
 import { ChatDarkTheme, ChatLightTheme } from '@/util/theme'
 import { MessageRole } from '@/util/ollama_api'
+import { ChatTextRender } from '@/components/ChatTextRender'
+import { useAppTheme } from '@/components/ThemeProvider'
 
 const renderBubble = ({
   child,
@@ -39,16 +41,16 @@ const renderBubble = ({
         position: "relative",
         ...message.type === "text" && {
           display: "flex",
+          alignItems: "center",
           gap: 4,
           flexDirection: "row",
-          paddingInline: 20,
-          paddingBlock: 10,
+          paddingInline: 12,
           borderWidth: 1,
           backgroundColor: defaultTheme.colors.inputBackground,
         }
       }}
     >
-      {message.type === "text" ? <Text style={{ color: "#fff" }}>{message.text}</Text> : child}
+      {message.type === "text" ? <ChatTextRender text={message.text!} /> : child}
       {message.loading ? (
         <View
           style={{
@@ -69,11 +71,12 @@ const renderBubble = ({
 
 const ChatApp = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const snackState = useSnackBarStore()
+
   const { checkService, initialize } = useOllamaStore()
   const { sendMessage, chat, isSending, initializeChats, getChat, deleteMessage, showMessageInput } = useChatStore()
   const { showActionSheetWithOptions } = useActionSheet()
   const { config: { theme } } = useConfigStore();
+  const { colors } = useAppTheme()
   const navigation = useNavigation()
   // we set a constant userId 
   // when we persist chat we can know which message is user
@@ -127,9 +130,8 @@ const ChatApp = () => {
       quality: 1,
       base64: true,
     });
-    if (!result.canceled) {
-    } else {
-      alert('You did not select any image.');
+    if (result.canceled) {
+      return
     }
     const response = result.assets?.[0]
 
@@ -149,7 +151,6 @@ const ChatApp = () => {
     }
   }
 
-
   const handleMessagePress = async (message: MessageType.Any) => {
     if (message.type === 'file') {
       try {
@@ -161,7 +162,7 @@ const ChatApp = () => {
 
       useSnackBarStore.getState().setSnack({
         visible: true,
-        message: "message is copy to Clipboard"
+        message: i18n.t("copiedToClipboard")
       });
     }
   }
@@ -221,11 +222,11 @@ const ChatApp = () => {
 
   const handleDelete = (messageId: string) => {
     Alert.alert(
-      "Delete Message",
-      "Are you sure you want to delete this message?",
+      i18n.t("deleteMessageDialogTitle"),
+      i18n.t("deleteMessageDialogDescription"),
       [
         {
-          text: i18n.t("deleteDialogCancel"),
+          text: i18n.t("cancel"),
           style: "cancel"
         },
         {

@@ -35,7 +35,7 @@
         "description": "First tip displayed in the sidebar",
         "context": "Visible in the sidebar"
     },
-    "tip1": "Delete messages by double tapping on them",
+    "tip1": "Double-tap to copy the message",
     "@tip1": {
         "description": "Second tip displayed in the sidebar",
         "context": "Visible in the sidebar"
@@ -55,6 +55,11 @@
         "description": "Fifth tip displayed in the sidebar",
         "context": "Visible in the sidebar"
     },
+    "tip5": "Long press to edit the message or chat",
+    "historyTitle":"history",
+    "search":"Search",
+    "chats":"All chats",
+    "copiedToClipboard":"Copied to clipboard",
     "deleteChat": "Delete",
     "@deleteChat": {
         "description": "Text displayed for delete chat option",
@@ -248,13 +253,16 @@
         "description": "Text displayed when the download of a model is successful",
         "context": "Visible in the model dialog"
     },
-    "deleteDialogTitle": "Delete Chat",
-    "@deleteDialogTitle": {
+    "modelDialogDeleteSuccess": "Model deleted successfully",
+    "deleteMessageDialogTitle": "Delete message",
+    "deleteMessageDialogDescription": "Are you sure you want to delete this message?",
+    "deleteChatDialogTitle": "Delete Chat",
+    "@deleteChatDialogTitle": {
         "description": "Title of the delete dialog",
         "context": "Visible in the delete dialog"
     },
-    "deleteDialogDescription": "Are you sure you want to continue? This will wipe all memory of this chat and cannot be undone.\nTo disable this dialog, visit the settings.",
-    "@deleteDialogDescription": {
+    "deleteChatDialogDescription": "Are you sure you want to continue? This will wipe all memory of this chat and cannot be undone.\nTo disable this dialog, visit the settings.",
+    "@deleteChatDialogDescription": {
         "description": "Description of the delete dialog",
         "context": "Visible in the delete dialog"
     },
@@ -263,8 +271,8 @@
         "description": "Text displayed for delete button, should be capitalized",
         "context": "Visible in the delete dialog"
     },
-    "deleteDialogCancel": "Cancel",
-    "@deleteDialogCancel": {
+    "cancel": "Cancel",
+    "@cancel": {
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the delete dialog"
     },

@@ -1,6 +1,6 @@
 import { i18n } from '@/util/l10n/i18n';
 import React, { useState } from 'react';
-import { List, useTheme } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { useAppTheme } from './ThemeProvider';
 
 export const Tips = () => {
@@ -11,6 +11,7 @@ export const Tips = () => {
     i18n.t("tip2"),
     i18n.t("tip3"),
     i18n.t("tip4"),
+    i18n.t("tip5"),
   ];
 
   const [selectedTipIndex, setSelectedTipIndex] = useState(0);

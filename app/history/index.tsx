@@ -16,23 +16,24 @@ export default function HistoryPage() {
     if (!searchQuery) return chats;
     return chats.filter((chat: Chat) => {
       const title = chat.title || '';
-      const lastMessage = chat.messages[chat.messages.length - 1]?.text || '';
+      const lastMessage = chat.messages[chat.messages.length - 1];
+      const lastMessageText = lastMessage.text || lastMessage.metadata?.text;
       const searchLower = searchQuery.toLowerCase();
       return (
         title.toLowerCase().includes(searchLower) ||
-        lastMessage.toLowerCase().includes(searchLower)
+        lastMessageText.toLowerCase().includes(searchLower)
       );
     });
   }, [chats, searchQuery]);
 
   const handleDelete = (chatId: string) => {
     Alert.alert(
-      i18n.t('deleteDialogTitle'),
-      i18n.t('deleteDialogDescription'),
+      i18n.t('deleteChatDialogTitle'),
+      i18n.t('deleteChatDialogDescription'),
 
       [
         {
-          text: i18n.t('deleteDialogCancel'),
+          text: i18n.t('cancel'),
           style: "cancel"
         },
         {
@@ -47,17 +48,16 @@ export default function HistoryPage() {
   const handleLongPress = (chat: Chat) => {
     showActionSheetWithOptions(
       {
-        options: ["Copy Title", i18n.t('deleteDialogDelete'), i18n.t('deleteDialogCancel')],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
+        options: [i18n.t('deleteDialogDelete'), i18n.t('cancel')],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
       },
       (selectedIndex) => {
         switch (selectedIndex) {
           case 0:
-            // Copy title logic here if needed
+            handleDelete(chat.id);
             break;
           case 1:
-            handleDelete(chat.id);
             break;
         }
       }
@@ -67,7 +67,7 @@ export default function HistoryPage() {
   return (
     <View style={styles.container}>
       <Searchbar
-        placeholder="Search chats"
+        placeholder={i18n.t("search")}
         onChangeText={setSearchQuery}
         value={searchQuery}
         style={styles.searchBar}
@@ -76,7 +76,7 @@ export default function HistoryPage() {
       <List.Section>
         {filteredChats.map((chat: Chat) => {
           const lastMessage = chat.messages[chat.messages.length - 1];
-          const previewText = lastMessage?.text || 'New Chat';
+          const previewText = lastMessage?.text || lastMessage.metadata?.text;
 
           return (
             <View key={chat.id}>

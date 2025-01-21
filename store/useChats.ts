@@ -6,12 +6,11 @@ import { produce } from "immer"
 import { v4 as uuidv4 } from 'uuid';
 
 import { useOllamaStore } from './useOllamaStore';
-import { createJSONStorage, persist } from "zustand/middleware";
 import { MessageType } from "@flyerhq/react-native-chat-ui";
 
 import { MessageRole } from "@/util/ollama_api";
 import { useSnackBarStore } from "./useSnackbar";
-import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitleAi } from "@/util/util";
+import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitleAi, getSystemMessage } from "@/util/util";
 import { noMarkdownPrompt, useConfigStore } from "./useConfig";
 import { i18n } from '@/util/l10n/i18n';
 
@@ -185,7 +184,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       set({
         chat: {
           // Todo do show system message  
-          messages: config.useSystem ? [{ role: MessageRole.SYSTEM, text: systemPrompt, id: uuidv4(), type: "text", author: { id: MessageRole.SYSTEM } }] : [],
+          messages: config.useSystem ? [getSystemMessage(systemPrompt)] : [],
           userId: message.author.id,
           title: "",
           model,
