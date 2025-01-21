@@ -195,7 +195,7 @@
         "description": "Text displayed for deny button, should be capitalized",
         "context": "Visible in the model dialog"
     },
-    "modelDialogAddAssuranceTitle": "Add {model}?",
+    "modelDialogAddAssuranceTitle": "Add %{model}?",
     "@modelDialogAddAssuranceTitle": {
         "description": "Title of the add model assurance dialog",
         "context": "Visible in the model dialog",
@@ -206,7 +206,7 @@
             }
         }
     },
-    "modelDialogAddAssuranceDescription": "Pressing 'Add' will download the model '{model}' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it'll resume if you enter the name into the model dialog again.",
+    "modelDialogAddAssuranceDescription": "Pressing 'Add' will download the model '%{model}' directly from the Ollama server to your host.\nThis can take a while depending on your internet connection. The action cannot be canceled.\nIf the app is closed during the download, it'll resume if you enter the name into the model dialog again.",
     "@modelDialogAddAssuranceDescription": {
         "description": "Description of the add model assurance dialog",
         "context": "Visible in the model dialog",
@@ -276,6 +276,7 @@
         "description": "Text displayed for cancel button, should be capitalized",
         "context": "Visible in the delete dialog"
     },
+    "confirm": "confirm",
     "dialogEnterNewTitle": "Enter new title",
     "@dialogEnterNewTitle": {
         "description": "Text displayed as description for new title input",
