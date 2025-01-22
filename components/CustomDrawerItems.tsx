@@ -14,7 +14,7 @@ export function CustomDrawerItems(props: DrawerContentComponentProps) {
         icon={({ size }) => (
           <Ionicons name="add" size={size} color={onBackground} />
         )}
-        onPress={() => props.navigation.navigate('chat/[id]')}
+        onPress={() => props.navigation.navigate('chat/[id]', { id: "new" })}
       />
       <DrawerItem
         label={i18n.t("optionSettings")}

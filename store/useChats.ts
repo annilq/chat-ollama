@@ -168,6 +168,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   },
 
   handleOllamaResponse: async (response: ChatResponse, messageId: string) => {
+
     const { config } = useConfigStore.getState()
 
     const isStream = config.requestType === "stream";
@@ -201,7 +202,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   sendMessage: async (message: CommonMessage) => {
     const { config } = useConfigStore.getState()
-    const model = get().chat?.model
+    const { model, messages } = get().chat || {}
     if (!model) {
       useSnackBarStore.getState().setSnack({
         visible: true,
@@ -210,7 +211,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       return
     }
 
-    if (!get().chat?.messages) {
+    if (!messages || messages.length === 0) {
       let systemPrompt = config.systemPrompt
       if (config.noMarkdown) {
         systemPrompt = systemPrompt + noMarkdownPrompt

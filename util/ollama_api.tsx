@@ -96,9 +96,10 @@ class OllamaAPI {
         for (const line of lines) {
           try {
             const parsedResponse = JSON.parse(line) as ChatResponse;
+            
             const nextResponse = produce(parsedResponse, draft => {
-              draft.message.content = finalResponse?.message.content || "" + parsedResponse.message.content
-            })
+              draft.message.content = (finalResponse?.message.content || "") + draft.message.content;
+            });
             finalResponse = nextResponse;
             onProgress?.(nextResponse);
           } catch (e) {
