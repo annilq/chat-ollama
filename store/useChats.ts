@@ -157,7 +157,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       if (index > -1) {
         chats.splice(index, 1, chat!);
       } else {
-        chats.push(chat!)
+        chats.unshift(chat!)
       }
 
       await AsyncStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
