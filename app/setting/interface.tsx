@@ -46,7 +46,6 @@ export default () => {
           buttons={[
             {
               value: 'stream',
-              disabled: true,
               label: i18n.t("settingsRequestTypeStream"),
             },
             {

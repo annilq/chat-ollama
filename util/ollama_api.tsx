@@ -1,4 +1,6 @@
 // Types for API responses and requests
+import { fetch, FetchRequestInit } from 'expo/fetch';
+import { produce } from 'immer';
 
 import { ChatResponse, ChatRequest, PullRequest, GenerateResponse, GenerateRequest, ListResponse, ModelResponse } from "ollama";
 
@@ -22,7 +24,7 @@ class OllamaAPI {
       this.abortController = null;
     }
   }
-  private async fetchWithError(endpoint: string, options: RequestInit): Promise<any> {
+  private async fetchWithError(endpoint: string, options: FetchRequestInit): Promise<any> {
 
     this.abortController = new AbortController();
 
@@ -51,12 +53,63 @@ class OllamaAPI {
   /**
    * Chat with a model using message history
    */
-  async chat(request: ChatRequest): Promise<ChatResponse | void> {
+  async chat(request: ChatRequest, onProgress: (response: ChatResponse) => void): Promise<ChatResponse | void> {
+    const { stream = true } = request
+    if (stream) {
+      return await this.chatWithStream(request, onProgress)
+    } else {
+      return await this.chatGenerate(request)
+    }
+  }
+
+  async chatGenerate(request: ChatRequest): Promise<ChatResponse | void> {
     const response = await this.fetchWithError('/api/chat', {
       method: 'POST',
       body: JSON.stringify(request),
     });
     return response.json()
+  }
+
+  async chatWithStream(request: ChatRequest, onProgress?: (response: ChatResponse) => void): Promise<ChatResponse | void> {
+    const response = await this.fetchWithError('/api/chat', {
+      method: 'POST',
+      body: JSON.stringify(request),
+      headers: {
+        'Accept': 'text/event-stream',
+      },
+    });
+
+    const reader = response.body?.getReader();
+    if (!reader) return;
+
+    const decoder = new TextDecoder();
+    let finalResponse: ChatResponse | undefined;
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n').filter(line => line.trim());
+
+        for (const line of lines) {
+          try {
+            const parsedResponse = JSON.parse(line) as ChatResponse;
+            const nextResponse = produce(parsedResponse, draft => {
+              draft.message.content = finalResponse?.message.content || "" + parsedResponse.message.content
+            })
+            finalResponse = nextResponse;
+            onProgress?.(nextResponse);
+          } catch (e) {
+            console.warn('Failed to parse streaming response:', e);
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    return finalResponse;
   }
 
   /**

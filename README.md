@@ -1,10 +1,6 @@
 ### plan to do
 1. add model
 
-### i18n
-tip5 longpress
-tip1 double tap to
-
 ### Thanks to below Apps
 
 - [react-native-chat-ui](https://github.com/flyerhq/react-native-chat-ui)
@@ -13,4 +9,4 @@ tip1 double tap to
 - [custom-theming-with-react-native-paper-expo-and-expo-router](https://hemanshum.medium.com/the-ultimate-guide-to-custom-theming-with-react-native-paper-expo-and-expo-router-8eba14adcab3)
 
 ### tips
-Ollama's API doesn't actually support Server-Sent Events (SSE) natively.Instead, it uses a line-delimited JSON streaming format, So I can't use ```react-native-sse``` to get stream Data ,and the React Native’s fetch API struggles with handling stream responses so far , so I can only display the feedback when the response completed.
+Ollama's API uses a line-delimited JSON streaming format, and the ```expo/fetch``` can receive a streaming response

@@ -97,11 +97,11 @@ const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] =
   }).reverse()
 }
 
-const getAssistantMessageFromOllama = (ollamaResponse: ChatResponse): CommonMessage => {
+const getAssistantMessageFromOllama = (ollamaResponse?: ChatResponse, messageId: string = uuidv4()): CommonMessage => {
   return {
-    id: uuidv4(),
-    text: ollamaResponse.message.content,
-    createdAt: ollamaResponse.created_at.valueOf(),
+    id: messageId,
+    text: ollamaResponse?.message.content || "",
+    createdAt: ollamaResponse?.created_at.valueOf(),
     author: {
       id: MessageRole.ASSISTANT,
     },

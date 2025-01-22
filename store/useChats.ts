@@ -13,6 +13,7 @@ import { useSnackBarStore } from "./useSnackbar";
 import { getOllamaMessageFromChatMessage, getAssistantMessageFromOllama, getTitleAi, getSystemMessage } from "@/util/util";
 import { noMarkdownPrompt, useConfigStore } from "./useConfig";
 import { i18n } from '@/util/l10n/i18n';
+import { ChatResponse } from "ollama";
 
 export const CHAT_STORAGE_KEY = '@ollama_chat_history';
 
@@ -39,6 +40,7 @@ export interface ChatState {
   isSending: boolean;
   error: string | null;
   initializeChats: () => Promise<void>;
+  handleOllamaResponse: (response: ChatResponse, messageId: string) => void;
   updateChat: () => Promise<void>;
   deleteChat: (chatId: string) => Promise<void>;
   showMessageInput: (messageId: string) => Promise<void>;
@@ -165,7 +167,40 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
   },
 
+  handleOllamaResponse: async (response: ChatResponse, messageId: string) => {
+    const { config } = useConfigStore.getState()
+
+    const isStream = config.requestType === "stream";
+    const showLoading = !response.done && !isStream
+
+    const chat = get().chat!;
+
+    const message = getAssistantMessageFromOllama(response, messageId)
+
+    const nextChat = produce(chat, draft => {
+      const lastmessage = draft.messages[0]
+      // if response is streaming
+      // now we store image vision info to 
+      if (lastmessage.id === message.id) {
+        if (draft.messages[1]?.type === "image") {
+          draft.messages[1].metadata = { text: message.text }
+        }
+        draft.messages[1].loading = showLoading
+        draft.messages[0] = message
+      } else {
+        if (lastmessage.type === "image") {
+          draft.messages[0].metadata = { text: message.text }
+        }
+        draft.messages[0].loading = showLoading
+        draft.messages = [message, ...draft.messages]
+      }
+    })
+    // set isSending false while the response is returnedj
+    set({ chat: nextChat, isSending: !response.done });
+  },
+
   sendMessage: async (message: CommonMessage) => {
+    const { config } = useConfigStore.getState()
     const model = get().chat?.model
     if (!model) {
       useSnackBarStore.getState().setSnack({
@@ -176,7 +211,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
 
     if (!get().chat?.messages) {
-      const { config } = useConfigStore.getState()
       let systemPrompt = config.systemPrompt
       if (config.noMarkdown) {
         systemPrompt = systemPrompt + noMarkdownPrompt
@@ -195,48 +229,28 @@ export const useChatStore = create<ChatState>((set, get) => ({
     }
 
     const chat = get().chat!;
-
     const nextChat = produce(chat, draft => {
-      draft.messages = [{ ...message, loading: true, role: MessageRole.USER }, ...draft.messages]
+      draft.messages = [{ ...message, loading: config.requestType === "stream" ? false : true, role: MessageRole.USER }, ...draft.messages]
     })
 
     set({ chat: nextChat, isSending: true });
 
     try {
       const messages = getOllamaMessageFromChatMessage(nextChat.messages);
-
-      const response = await useOllamaStore.getState().ollama.chat({
-        model,
-        stream: false,
-        messages,
-      });
-
+      //  streaming response share messageId
+      const messageId = uuidv4()
+      const response = await useOllamaStore.getState().ollama.chat(
+        {
+          model,
+          stream: config.requestType === "stream",
+          messages,
+        },
+        (streamResponse) => {
+          get().handleOllamaResponse(streamResponse, messageId)
+        }
+      );
       if (response?.done) {
-        const responseMessage = getAssistantMessageFromOllama(response)
-
-        const chat = get().chat!;
-        const nextChat = produce(chat, draft => {
-          const [lastmessage, ...currentMessages] = draft.messages!;
-          if (lastmessage.type === "image") {
-            draft.messages = [
-              // think if show the image response to user or just set the response to lastmessage.content
-              // when user edit image ,it can update the vision result
-              responseMessage,
-              {
-                ...lastmessage,
-                // metadata can store user custom info
-                metadata: { text: response.message.content },
-                loading: false
-              }, ...currentMessages
-            ]
-          } else {
-            draft.messages = [responseMessage, { ...lastmessage, loading: false }, ...currentMessages]
-          }
-        })
-        // set isSending false while the response is returnedj
-        set({ chat: nextChat, isSending: false });
-
-        const config = useConfigStore.getState().config
+        get().handleOllamaResponse(response, messageId)
 
         if (config.generateTitles) {
           const title = await getTitleAi(get().chat!.messages)

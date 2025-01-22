@@ -46,7 +46,7 @@ export const useConfigStore = create(
         noMarkdown: false,
 
         generateTitles: true,
-        requestType: "generate",
+        requestType: "stream",
         messageEditable: true,
         clearChatWhenResetModel: false,
         showConfirmWhenChatDelete: true,
