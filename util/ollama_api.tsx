@@ -96,7 +96,7 @@ class OllamaAPI {
         for (const line of lines) {
           try {
             const parsedResponse = JSON.parse(line) as ChatResponse;
-            
+
             const nextResponse = produce(parsedResponse, draft => {
               draft.message.content = (finalResponse?.message.content || "") + draft.message.content;
             });
@@ -137,10 +137,12 @@ class OllamaAPI {
    * Pull a model from the Ollama library
    */
   async pull(request: PullRequest): Promise<ModelResponse> {
-    return this.fetchWithError('/api/pull', {
+    const response = await this.fetchWithError('/api/pull', {
       method: 'POST',
       body: JSON.stringify(request),
     });
+    return response.json();
+
   }
 
   /**

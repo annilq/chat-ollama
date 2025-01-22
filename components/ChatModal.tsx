@@ -10,6 +10,7 @@ import { useConfigStore } from '@/store/useConfig';
 import useChatStore from '@/store/useChats';
 import { getStyles } from '@/styles/style';
 import Divider from './Divider';
+import { LoadingLine } from './LoadingLine';
 
 const getModelName = (name: string) => name?.split(":")[0]
 
@@ -119,21 +120,24 @@ export const ChatModal = () => {
 							<Text style={getStyles("font-bold")}>{i18n.t("modelDialogAddPromptTitle")}</Text>
 							<Divider style={{ marginVertical: 4 }} />
 							<Text>{i18n.t("modelDialogAddPromptDescription")}</Text>
-							<TextInput
-								mode="outlined"
-								value={inputText}
-								onChangeText={setInputText}
-								style={{ width: "100%" }}
-								right={
-									<TextInput.Icon
-										icon={isLoading ? "loading" : "content-save"}
-										onPress={() => {
-											if (inputText) {
-												setVisible(true)
-											}
-										}} />
-								}
-							/>
+							<View>
+								<TextInput
+									mode="outlined"
+									value={inputText}
+									onChangeText={setInputText}
+									style={{ width: "100%" }}
+									right={
+										<TextInput.Icon
+											icon={"content-save"}
+											onPress={() => {
+												if (inputText) {
+													setVisible(true)
+												}
+											}} />
+									}
+								/>
+								{isLoading ? <LoadingLine /> : false}
+							</View>
 						</View>
 					</BottomSheetView>
 				</BottomSheet>

@@ -77,7 +77,9 @@ export const useOllamaStore = create<OllamaState>((set, get) => ({
   pullModel: async (modelName) => {
     try {
       set({ isLoading: true, error: null });
-      await get().ollama.pull({ model: modelName });
+      const response = await get().ollama.pull({ model: modelName, stream: false });
+      // console.log(response);
+
       await get().refreshModels();
       useSnackBarStore.getState().setSnack({
         visible: true,
