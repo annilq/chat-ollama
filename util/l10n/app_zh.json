@@ -102,6 +102,7 @@
   "settingsEnableEditing": "启用消息编辑",
   "settingsAskBeforeDelete": "删除聊天前确认",
   "settingsShowTips": "在侧边栏显示提示",
+  "settingsLanguage": "语言",
   "settingsKeepModelLoadedAlways": "始终保持模型加载",
   "settingsKeepModelLoadedNever": "不保持模型加载",
   "settingsKeepModelLoadedFor": "设置模型加载的时间",

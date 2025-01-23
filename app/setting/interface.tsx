@@ -1,14 +1,15 @@
 import styles from '@/styles/style';
 import * as React from 'react';
 import { View } from 'react-native';
-import { Switch, List, SegmentedButtons } from 'react-native-paper';
+import { Switch, List, SegmentedButtons, Menu, Button } from 'react-native-paper';
 import Divider from '@/components/Divider';
 import { RequestType, theme, useConfigStore } from '@/store/useConfig';
-import { i18n } from '@/util/l10n/i18n';
+import { i18n, languages } from '@/util/l10n/i18n';
 
 export default () => {
   const {
     config: {
+      locale,
       theme,
       showModelTag,
       showTipsInDrawer,
@@ -20,6 +21,16 @@ export default () => {
     },
     setConfig
   } = useConfigStore()
+
+  const [visible, setVisible] = React.useState(false);
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
+  const handleLanguageChange = (locale: string) => {    
+    setConfig({ locale });
+    i18n.locale = locale;
+    closeMenu();
+  };
 
   return (
     <View style={[styles["px-4"], styles["mt-4"]]} >
@@ -70,7 +81,24 @@ export default () => {
           title={i18n.t("settingsShowTips")}
           right={(props) => <Switch {...props} value={showTipsInDrawer} onValueChange={(value) => setConfig({ showTipsInDrawer: value })} />}
         />
-
+        <List.Item
+          title={i18n.t("settingsLanguage")}
+          right={(props) => (
+            <Menu
+              {...props}
+              visible={visible}
+              onDismiss={closeMenu}
+              anchor={<Button onPress={openMenu}>{languages.find(ln => ln.value === locale)?.title}</Button>}>
+              {languages.map(ln => (
+                <Menu.Item
+                  key={ln.value}
+                  onPress={() => handleLanguageChange(ln.value)}
+                  title={ln.title}
+                />
+              ))}
+            </Menu>
+          )}
+        />
         {/* <Divider />
         <List.Item
           title="always keep preload model"

@@ -102,6 +102,7 @@
   "settingsEnableEditing": "Nachrichtenbearbeitung aktivieren",
   "settingsAskBeforeDelete": "Vor Löschung des Chats fragen",
   "settingsShowTips": "Tipps in der Seitenleiste anzeigen",
+  "settingsLanguage": "Language",
   "settingsKeepModelLoadedAlways": "Modell immer geladen lassen",
   "settingsKeepModelLoadedNever": "Modell nicht dauerhaft laden",
   "settingsKeepModelLoadedFor": "Bestimmte Modell-Ladedauer festlegen",

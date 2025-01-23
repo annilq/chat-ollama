@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { storage } from '@/util/storage';
 import { Appearance } from 'react-native';
+import { getLocales } from 'expo-localization';
 
 const colorScheme = Appearance.getColorScheme();
 
@@ -25,11 +26,11 @@ interface Config {
   showConfirmWhenChatDelete: boolean
   timeoutTimes: number
   // UI
+  locale: string,
   showTipsInDrawer: boolean
   showModelTag: boolean
   theme: "dark" | "light" | "system"
   enableHaptic: boolean
-
 }
 
 export interface ConfigState {
@@ -53,6 +54,7 @@ export const useConfigStore = create(
         timeoutTimes: 1,
 
         showTipsInDrawer: true,
+        locale: getLocales()[0].languageCode!,// Set the locale once at the beginning of your app.
         showModelTag: false,
         theme: colorScheme!,
         enableHaptic: true

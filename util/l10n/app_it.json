@@ -102,6 +102,7 @@
   "settingsEnableEditing": "Abilita modifica di messaggi",
   "settingsAskBeforeDelete": "Chiedi prima di eliminare la chat",
   "settingsShowTips": "Mostra suggerimenti nella barra laterale",
+  "settingsLanguage": "Language",
   "settingsKeepModelLoadedAlways": "Mantieni modello sempre caricato",
   "settingsKeepModelLoadedNever": "Non mantenere modello sempre caricato",
   "settingsKeepModelLoadedFor": "Imposta un tempo specifico per mantenere il modello caricato",

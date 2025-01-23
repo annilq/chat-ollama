@@ -5,10 +5,20 @@ import { expo } from '../app.json';
 import { AppRegistry } from "react-native";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AppDrawer } from "@/components/Drawer";
+import { useConfigStore } from "@/store/useConfig";
+import { useEffect } from "react";
+import { i18n } from "@/util/l10n/i18n";
 
 
 export default function RootLayout() {
   // Initialize Ollama store and set up health check
+  const { config: { locale } } = useConfigStore()
+
+  useEffect(() => {
+    if (locale) {
+      i18n.locale = locale;
+    }
+  }, [locale])
 
   return (
     <SafeAreaProvider>

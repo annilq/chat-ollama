@@ -56,10 +56,10 @@
         "context": "Visible in the sidebar"
     },
     "tip5": "Long press to edit the message or chat",
-    "historyTitle":"history",
-    "search":"Search",
-    "chats":"All chats",
-    "copiedToClipboard":"Copied to clipboard",
+    "historyTitle": "history",
+    "search": "Search",
+    "chats": "All chats",
+    "copiedToClipboard": "Copied to clipboard",
     "deleteChat": "Delete",
     "@deleteChat": {
         "description": "Text displayed for delete chat option",
@@ -504,6 +504,7 @@
         "description": "Text displayed as description for show tips toggle",
         "context": "Visible in the settings view"
     },
+    "settingsLanguage": "Language",
     "settingsKeepModelLoadedAlways": "Keep model always loaded",
     "@settingsKeepModelLoadedAlways": {
         "description": "Text displayed as description for keep model loaded always toggle",

@@ -102,6 +102,7 @@
   "settingsEnableEditing": "Mesaj düzenlemeyi etkinleştir",
   "settingsAskBeforeDelete": "Sohbet silmeden önce sor",
   "settingsShowTips": "Kenar çubuğunda ipuçlarını göster",
+  "settingsLanguage": "Language",
   "settingsKeepModelLoadedAlways": "Modeli her zaman yüklü tut",
   "settingsKeepModelLoadedNever": "Modeli yüklü tutma",
   "settingsKeepModelLoadedFor": "Modelin yüklü kalacağı belirli bir süre ayarla",

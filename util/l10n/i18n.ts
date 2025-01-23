@@ -1,4 +1,3 @@
-import { getLocales } from 'expo-localization';
 import { I18n } from 'i18n-js';
 import de from "./app_de.json";
 import en from "./app_en.json";
@@ -17,6 +16,11 @@ export const i18n = new I18n({
   zh,
 });
 
-// Set the locale once at the beginning of your app.
-i18n.locale = getLocales()[0].languageCode!;
-
+export const languages = [
+  { value: "zh", title: "Chinese" },
+  { value: "en", title: "English" },
+  { value: "de", title: "Germany" },
+  { value: "it", title: "Italy" },
+  { value: "fa", title: "France" },
+  { value: "tr", title: "Turkish" }
+] as const
