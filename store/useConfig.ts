@@ -14,6 +14,7 @@ export type RequestType = "stream" | "generate"
 export type theme = "dark" | "light"
 
 interface Config {
+  isFirstLaunch: boolean
   // setting page config
   systemPrompt: string
   useSystem: boolean
@@ -33,15 +34,19 @@ interface Config {
   enableHaptic: boolean
 }
 
-export interface ConfigState {
+interface ConfigState {
   config: Config
+  isHydrated: boolean
   setConfig: (config: Partial<Config>) => void;
 }
 
 export const useConfigStore = create(
   persist<ConfigState>(
     (set, get) => ({
+      isHydrated: false,
       config: {
+        isFirstLaunch: true,
+
         useSystem: false,
         systemPrompt: DEFAULT_PROMPT,
         noMarkdown: false,
@@ -64,6 +69,10 @@ export const useConfigStore = create(
     {
       name: 'app-config',
       storage: createJSONStorage(() => storage),
+      onRehydrateStorage: (state) => (state) => {
+        state?.setConfig(state.config)
+        useConfigStore.setState({ isHydrated: true })
+      },
     },
   ),
 )
