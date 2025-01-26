@@ -1,3 +1,10 @@
+### Support
+1. stream response
+2. dark theme
+3. i18n
+4. markdown render
+5. import & export
+
 ### Thanks to below Apps and articles
 
 - [react-native-chat-ui](https://github.com/flyerhq/react-native-chat-ui)
