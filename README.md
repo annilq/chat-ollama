@@ -1,7 +1,4 @@
-### plan to do
-1. add model
-
-### Thanks to below Apps
+### Thanks to below Apps and articles
 
 - [react-native-chat-ui](https://github.com/flyerhq/react-native-chat-ui)
 - [ollama-app](https://github.com/JHubi1/ollama-app)
