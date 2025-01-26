@@ -1,6 +1,5 @@
-import { PaperProvider, useTheme as usePaperTheme, Portal, Snackbar } from 'react-native-paper';
+import { PaperProvider, useTheme as usePaperTheme } from 'react-native-paper';
 import { PortalProvider } from '@gorhom/portal';
-import { useSnackBarStore } from "@/store/useSnackbar";
 import { useConfigStore } from '@/store/useConfig';
 import { PaperLightTheme, PaperDarkTheme } from '@/util/theme';
 import { Appearance } from 'react-native';
@@ -12,6 +11,7 @@ import {
   ThemeProvider as NavigationDefaultThemeProvider,
 } from "@react-navigation/native";
 import merge from "deepmerge";
+import { MessageToast } from '@/components/MessageToast';
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -29,8 +29,8 @@ export const useAppTheme = () => {
 };
 const CombinedLightTheme = merge(LightTheme, PaperLightTheme);
 const CombinedDarkTheme = merge(DarkTheme, PaperDarkTheme);
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const snackState = useSnackBarStore();
   const { config: { theme } } = useConfigStore();
 
   const paperTheme = useMemo(() =>
@@ -44,18 +44,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         <PaperProvider theme={paperTheme}>
           <PortalProvider>
             {children}
-            <Portal>
-              <Snackbar
-                elevation={5}
-                visible={snackState.visible}
-                onDismiss={() => snackState.setSnack({ visible: false })}
-                action={{
-                  label: 'close',
-                }}
-              >
-                {snackState.message}
-              </Snackbar>
-            </Portal>
+            <MessageToast />
           </PortalProvider>
         </PaperProvider>
       </ThemeContext.Provider>
