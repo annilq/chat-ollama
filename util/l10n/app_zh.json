@@ -1,5 +1,6 @@
 {
   "@@locale": "zh",
+  "imagePrompt": "请描述图片中有哪些物品，以及他们之间的关系,并用上面出现的物品写一篇小短文，要求能将各种物品关联起来，语言优美，语境积极向上",
   "appTitle": "Ollama",
   "optionNewChat": "新建聊天",
   "optionSettings": "设置",

@@ -1,6 +1,7 @@
 {
   "@@locale": "it",
   "appTitle": "Ollama",
+  "imagePrompt": "Per favore, descrivi gli oggetti nell’immagine e la loro relazione tra di loro. Poi scrivi un breve racconto utilizzando gli oggetti sopra menzionati e collegandoli. Il linguaggio dovrebbe essere bello e il tono positivo e ispirante.",
   "optionNewChat": "Nuova Chat",
   "optionSettings": "Impostazioni",
   "optionInstallPwa": "Installa Webapp",

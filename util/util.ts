@@ -5,6 +5,7 @@ import { ChatResponse, Message } from 'ollama';
 import useChatStore, { CommonMessage } from '@/store/useChats';
 import { useOllamaStore } from '@/store/useOllamaStore';
 import { MessageType } from '@flyerhq/react-native-chat-ui';
+import { i18n } from './l10n/i18n';
 
 // Function to get the title from AI
 async function getTitleAi(messages: CommonMessage[]): Promise<string> {
@@ -58,8 +59,7 @@ async function getTitleAi(messages: CommonMessage[]): Promise<string> {
 }
 
 const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] => {
-
-  return messages.map(message => {
+  const historyMessages = messages.map(message => {
     const { role = MessageRole.ASSISTANT, type = "text" } = message
     switch (type) {
       case "text":
@@ -67,13 +67,12 @@ const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] =
           role: role,
           content: (message as MessageType.Text).text!
         })
-
       case "image":
         // split base64
         const base64 = (message as MessageType.Image).uri.split("base64,")[1]
         return ({
           role: role,
-          content: "",
+          content: i18n.t("imagePrompt"),
           images: [base64]
         })
       case "file":
@@ -95,6 +94,7 @@ const getOllamaMessageFromChatMessage = (messages: CommonMessage[]): Message[] =
         })
     }
   }).reverse()
+  return historyMessages
 }
 
 const getAssistantMessageFromOllama = (ollamaResponse?: ChatResponse, messageId: string = uuidv4()): CommonMessage => {

@@ -1,6 +1,7 @@
 {
   "@@locale": "de",
   "appTitle": "Ollama",
+  "imagePrompt": "Bitte beschreiben Sie, welche Gegenstände auf dem Bild zu sehen sind und wie sie miteinander in Beziehung stehen. Schreiben Sie anschließend eine kurze Erzählung, in der Sie die oben genannten Gegenstände verwenden und miteinander verbinden. Der Text soll eine positive und inspirierende Stimmung vermitteln.",
   "optionNewChat": "Neuer Chat",
   "optionSettings": "Einstellungen",
   "optionInstallPwa": "Webapp installieren",
