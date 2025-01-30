@@ -56,7 +56,7 @@ export function ChatList(props: DrawerContentComponentProps) {
 
 function ChatItem(props: { data: Chat, onPress: () => void }) {
   const { data, onPress } = props;
-  const lastMessage = data.messages[data.messages.length - 1];
+  const lastMessage = data.messages?.[data.messages.length - 1];
   const defaultTitle = lastMessage?.text || lastMessage?.metadata?.text;
 
   return (
