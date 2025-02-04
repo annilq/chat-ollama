@@ -53,7 +53,7 @@ class OllamaAPI {
   /**
    * Chat with a model using message history
    */
-  async chat(request: ChatRequest, onProgress: (response: ChatResponse) => void): Promise<ChatResponse | void> {
+  async chat(request: ChatRequest, onProgress?: (response: ChatResponse) => void): Promise<ChatResponse | void> {
     const { stream = true } = request
     if (stream) {
       return await this.chatWithStream(request, onProgress)
