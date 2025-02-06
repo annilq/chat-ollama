@@ -17,7 +17,7 @@ export const i18n = new I18n({
 });
 
 export const languages = [
-  { value: "zh", title: "Chinese" },
+  { value: "zh", title: "中文" },
   { value: "en", title: "English" },
   { value: "de", title: "Germany" },
   { value: "it", title: "Italy" },
