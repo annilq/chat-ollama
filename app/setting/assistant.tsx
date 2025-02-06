@@ -12,7 +12,7 @@ export default () => {
       <TextInput
         mode="outlined"
         multiline
-        style={{ height: 100 }}
+        style={{ minHeight: 100 }}
         label={i18n.t("settingsSystemMessage")}
         onChangeText={(text) => setConfig({ systemPrompt: text })}
         value={systemPrompt}

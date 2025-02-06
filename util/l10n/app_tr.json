@@ -1,6 +1,7 @@
 {
   "@@locale": "tr",
   "appTitle": "Ollama",
+  "imagePrompt": "Lütfen resimdeki nesneleri ve aralarındaki ilişkileri tanımlayın. Ardından, yukarıda bahsedilen nesneleri kullanarak kısa bir hikaye yazın ve bunları birbirine bağlayın. Dil güzel olmalı ve ton olumlu ve ilham verici olmalıdır.",
   "optionNewChat": "Yeni Sohbet",
   "optionSettings": "Ayarlar",
   "optionInstallPwa": "Web Uygulamasını Yükle",

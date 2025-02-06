@@ -5,6 +5,7 @@
         "description": "Title of the application",
         "context": "Visible in the side bar"
     },
+    "imagePrompt": "Please describe the items in the picture and their relationships to each other. Then, write a short story using the items mentioned above and connect them. The language should be beautiful, and the tone should be positive and uplifting.",
     "optionNewChat": "New Chat",
     "@optionNewChat": {
         "description": "Text displayed for new chat option",
